@@ -20,6 +20,11 @@ namespace Elin.Plugin.Main
         /// <param name="harmony"></param>
         private void AwakePlugin(Harmony harmony)
         {
+#if DEBUG
+            // サンプル用パッチ処理のため削除してください
+            PatchSample(harmony);
+#endif
+            //NOP
         }
 
         /// <summary>
@@ -42,10 +47,6 @@ namespace Elin.Plugin.Main
 
             AwakePlugin(harmony);
 
-#if DEBUG
-            // サンプル用パッチ処理のため削除してください
-            PatchSample(harmony);
-#endif
             harmony.PatchAll();
         }
 
