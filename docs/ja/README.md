@@ -1,4 +1,4 @@
-# elin-mod-dev-setup
+# テンプレートを用いた Mod 開発
 
 開発想定環境は Windows 11 以上で Visual Studio 2026 以降を想定しています。
 
