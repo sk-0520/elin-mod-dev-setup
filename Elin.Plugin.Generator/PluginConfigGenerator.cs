@@ -282,7 +282,7 @@ namespace Elin.Plugin.Generator
                 return $$"""
 
                 public ConfigEntry<{{symbol.Type.ToDisplayString()}}> {{symbol.Name}} { get; set; }
-                
+
                 """;
             }
 
@@ -396,7 +396,7 @@ namespace Elin.Plugin.Generator
 
                 #endregion
             }
-            
+
             """;
 
             return source;
@@ -616,7 +616,7 @@ namespace Elin.Plugin.Generator
                         public virtual int NestedValue { get; set; }
                     }
                     [GeneratePluginConfig]
-                    class MySetting
+                    partial class MySetting
                     {
                         public virtual int Value { get; set; }
                         public MyNestedSetting Nested { get; set; }

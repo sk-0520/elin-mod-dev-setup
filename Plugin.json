@@ -18,6 +18,6 @@
     "name": "Mod の内部名前(アセンブリ名と合わせるが無難(二重定義になっちゃう悲しみ))",
     "version": "0.0.0",
     "useDebugId": true,
-    "log": "x:\\mod.log"
+    "log": "NUL"
   }
 }

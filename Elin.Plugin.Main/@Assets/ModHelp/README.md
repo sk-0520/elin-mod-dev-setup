@@ -1,6 +1,6 @@
-# ModHelp 用原本
+# Mod Help 用原本
 
-[ModHelp](https://steamcommunity.com/workshop/filedetails/?id=3406542368) に読み込ませるヘルプファイルの元ファイルと、ゲーム起動なしに確認するためのテンプレートです。
+[Mod Help](https://steamcommunity.com/workshop/filedetails/?id=3406542368) に読み込ませるヘルプファイルの元ファイルと、ゲーム起動なしに確認するためのテンプレートです。
 
 `index.xhtml` に以下ルールで記述することで Mod ビルド時に自動生成されます。
 
