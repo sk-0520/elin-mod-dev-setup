@@ -1,0 +1,23 @@
+{
+  "$schema": "./dev-items/Plugin.schema.json",
+  "package": {
+    "title": "ユーザーに表示される Mod 名",
+    "id": "Please.Edit.Mod.Id",
+    "author": "作者",
+    "loadPriority": 100,
+    "elinVersion": "0.23.287",
+    "description": [
+      "説明1行目",
+      "説明2行目"
+    ],
+    "tags": [
+      "General"
+    ]
+  },
+  "mod": {
+    "name": "Mod の内部名前(アセンブリ名と合わせるが無難(二重定義になっちゃう悲しみ))",
+    "version": "0.0.0",
+    "useDebugId": true,
+    "log": "x:\\mod.log"
+  }
+}
