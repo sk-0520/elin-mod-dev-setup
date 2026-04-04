@@ -1,6 +1,9 @@
 using BepInEx;
 using Elin.Plugin.Generated;
 using Elin.Plugin.Main.PluginHelpers;
+#if DEBUG
+using Elin.Plugin.Main.Samples;
+#endif
 using HarmonyLib;
 using System;
 using System.Reflection;
@@ -69,7 +72,7 @@ namespace Elin.Plugin.Main
             var original = AccessTools.Method(nestedType, nameof(SourceElement.Row.GetText), new Type[] { typeof(string), typeof(bool) });
 
             // Prefix の MethodInfo を取得（このクラス内に static メソッドを用意）
-            var prefix = typeof(Patches.Samples.SourceElementRowPatch).GetMethod(nameof(Patches.Samples.SourceElementRowPatch.GetTextPrefix),
+            var prefix = typeof(SourceElementRowPatch).GetMethod(nameof(SourceElementRowPatch.GetTextPrefix),
                 BindingFlags.Static | BindingFlags.Public);
 
             harmony.Patch(original, prefix: new HarmonyMethod(prefix));
