@@ -1,7 +1,9 @@
 using BepInEx;
 using Elin.Plugin.Generated;
 using Elin.Plugin.Main.PluginHelpers;
+#if DEBUG
 using Elin.Plugin.Main.Samples;
+#endif
 using HarmonyLib;
 using System;
 using System.Reflection;
