@@ -37,7 +37,7 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
 
 ### 開発準備
 
-展開したファイルのうち、 `Directory.Build.props.user` を開き `AssemblyName` を自身の Mod ファイル名に変更してください。
+展開したファイルのうち、 `Directory.Build.props.user` を開き `AssemblyName` を作成したい Mod のファイル名に変更してください。
 
 ```diff
 <Project>
@@ -57,6 +57,8 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
 
 > [!CAUTION]
 > 本工程を実施しないとビルドできません
+
+ここで設定されたアセンブリ名は、最終的な Mod ファイル名およびディレクトリ名として扱われるため、ファイル名として扱える文字列だけを使用してください。
 
 
 ### Steam/Elin のパス確認
@@ -184,12 +186,9 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
    * `description`
      * 説明文は長くなる可能性があるので配列として、1要素1行で定義してください
    * `tags`
-     * カンマ区切りはしんどいので配列として1要素1タグとして定義してください
+     * カンマ区切りはしんどいので配列として1要素1タグで定義してください
  * `$.mod`
    * Mod としての定義です
-     * `name`
-       * Mod の名前です
-       * アセンブリ名と合わせておくのが無難です
      * `version`
        * Mod のバージョンです
        * 最終的にアセンブリバージョンに反映されます
@@ -228,7 +227,7 @@ Plugin.json の情報をもとに以下のクラスが生成されます。
     "general": {
         "seiShouNagon": {
             "JP": "いとおかし",
-            "EN": "Very witty"
+            "EN": "How charming"
         }
     }
     ...(略)...
@@ -250,7 +249,7 @@ class Class {
 
 とすることで Class.Method が呼ばれたタイミングで、メッセージログに「いとおかし」が表示されます。
 
-Elin の言語設定を英語に変えて再度呼び出すと「Very witty」が表示されます。
+Elin の言語設定を英語に変えて再度呼び出すと「How charming」が表示されます。
 
 Json 側のプロパティ名はキャメル形式ですが、C#側で使用する場合はパスカル形式になる点に注意してください。
 
@@ -307,7 +306,7 @@ Elin の言語設定を英語に変えて再度呼び出すと「Departing in 10
  * ZHTW
  * KR
 
-ただし Elin 本体は JP/EN のみ、公式サポートとしては CN のみが適用されているため、それ以外の言語の挙動については不明です。
+ただし Elin 本体は JP/EN のみ、公式サポートとしては CN のみが提供されているため、それ以外の言語の挙動については不明です。
 
 ## ModHelper
 

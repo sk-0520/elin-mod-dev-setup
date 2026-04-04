@@ -282,7 +282,7 @@ namespace Elin.Plugin.Generator
                 return $$"""
 
                 public ConfigEntry<{{symbol.Type.ToDisplayString()}}> {{symbol.Name}} { get; set; }
-
+                
                 """;
             }
 
@@ -396,7 +396,7 @@ namespace Elin.Plugin.Generator
 
                 #endregion
             }
-
+            
             """;
 
             return source;
