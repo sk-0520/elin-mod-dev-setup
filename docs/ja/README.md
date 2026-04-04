@@ -156,15 +156,15 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
    * ファイルが存在すれば配布ファイルに含まれます
      * ModHelp ディレクトリは配布ファイルに含まれません
      * ModHelp については後述
- * Patches/Samples/
-   * サンプルです
-   * 初めて Mod を作る場合、一通り眺めたら消してください。初めてじゃなければ消してください
  * PluginHelpers/
    * テンプレート提供機能群です
    * 色々絡んでるので消さないでください
    * とりあえず後述になりますが、 `ModHelper` だけ使えればいいです
  * Properties/
    * 後述
+ * Samples/
+   * サンプルです
+   * 初めて Mod を作る場合、一通り眺めたら消してください。初めてじゃなければ消してください
  * AssemblyInfo.cs
    * プロジェクトファイルによる  AssemblyInfo.cs 生成は抑制しているのでアセンブリ設定を行う場合はこちらで実施してください
  * Elin.Plugin.Main.csproj

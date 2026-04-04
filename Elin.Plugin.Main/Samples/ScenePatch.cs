@@ -2,7 +2,7 @@ using Elin.Plugin.Main.PluginHelpers;
 using HarmonyLib;
 
 #if DEBUG
-namespace Elin.Plugin.Main.Patches.Samples
+namespace Elin.Plugin.Main.Samples
 {
     [HarmonyPatch(typeof(Scene))]
     public class ScenePatch

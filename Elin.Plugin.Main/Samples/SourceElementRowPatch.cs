@@ -1,6 +1,6 @@
 using Elin.Plugin.Main.PluginHelpers;
 
-namespace Elin.Plugin.Main.Patches.Samples
+namespace Elin.Plugin.Main.Samples
 {
     internal class SourceElementRowPatch
     {
