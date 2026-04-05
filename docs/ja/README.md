@@ -175,7 +175,10 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
    * いわゆるエントリーポイントです
    * `PatchSample` メソッドは簡単にパッチを充てられない場合のサンプルになってますので、消してください
    * Mod 開発においては `AwakePlugin`, `OnDestroyPlugin` を編集の起点にして問題ないはずです
-     * `Awake`, `OnDestroy` はテンプレート側で少しさわってるので上記メソッドを使用してください
+ * Plugin.ModTemplate.cs
+   * テンプレートの提供する処理がこちらに記述されています
+     * `Awake`, `OnDestroy` 何かがその対象です
+     * 命名として `*.ModTemplate.cs` は Mod 開発者コードに混入せざるを得ない実装を可能な限り分離したものになります
 
 ### Plugin.json
 
