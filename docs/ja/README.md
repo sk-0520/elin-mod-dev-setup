@@ -177,7 +177,7 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
    * Mod 開発においては `AwakePlugin`, `OnDestroyPlugin` を編集の起点にして問題ないはずです
  * Plugin.ModTemplate.cs
    * テンプレートの提供する処理がこちらに記述されています
-     * `Awake`, `OnDestroy` 何かがその対象です
+     * `Awake`, `OnDestroy` などがその対象です
      * 命名として `*.ModTemplate.cs` は Mod 開発者コードに混入せざるを得ない実装を可能な限り分離したものになります
 
 ### Plugin.json
