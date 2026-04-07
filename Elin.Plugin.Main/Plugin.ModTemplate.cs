@@ -23,8 +23,7 @@ namespace Elin.Plugin.Main
 
             AwakePlugin(harmony);
 
-            // 使わん
-            //harmony.PatchAll();
+            harmony.PatchAll();
         }
 
         public void OnDestroy()
