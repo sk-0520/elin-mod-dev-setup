@@ -324,14 +324,14 @@ Elin の言語設定を英語に変えて再度呼び出すと「Departing in 10
  * `ModHelper.Elin`
    * Elin 本体処理のヘルパーになります
    * が、テンプレート提供機能としては何もないに等しいです
- * `ModHelper.MessageDebug`
-   * デバッグ時のみメッセージログを表示します
+ * `ModHelper.MessageDev`
+   * 開発時のみメッセージログを表示します
    * メッセージが表示できる場合のみ使用してください
- * `ModHelper.WriteDebug`
-   * デバッグ時のみファイルログを出力します
+ * `ModHelper.WriteDev`
+   * 開発時のみファイルログを出力します
    * ファイルは Plugin.json の mod.log となります
- * `ModHelper.LogDebug`
-   * デバッグ時のみメッセージログ + ファイルログを出力します
+ * `ModHelper.LogDev`
+   * 開発時のみメッセージログ + ファイルログを出力します
    * メッセージが表示できる場合のみ使用してください
  * `ModHelper.LogNotExpected`
    * Mod が想定しない場合に内容をログ出力します
