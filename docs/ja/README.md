@@ -101,6 +101,10 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
 | ⚠️ | テンプレート提供機能が Mod に影響を与えるので消さないでください |
 
  * 🚮 .github/
+   * CI 処理なので消しても問題ないです
+   * あってもプログラムとしては問題ないけど、たぶんあったらダメです
+   * 🚮 copilot-instructions.md
+     * 本リポジトリにおけるAI用のあれこれなので Mod 側で持ってても意味ないです
  * 🚮 .vscode/
    * VSCode 設定, ちょっとした用途であった方がいいような、別にいいような
  * ⚠️ .dev-items/
