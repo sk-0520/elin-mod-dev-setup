@@ -16,13 +16,13 @@ namespace Elin.Plugin.Main.Samples
             switch (newMode)
             {
                 case Scene.Mode.Title:
-                    ModHelper.WriteDebug("DEBUG START!");
+                    ModHelper.WriteDev("DEBUG START!");
                     break;
 
                 case Scene.Mode.StartGame:
-                    ModHelper.LogDebug(ModHelper.Lang.General.HelloWorld);
-                    ModHelper.LogDebug(ModHelper.Lang.Formatter.FormatHelloFormat(a: 999, b: 1, c: 1000));
-                    ModHelper.LogDebug(ModHelper.ToStringFromInformation());
+                    ModHelper.LogDev(ModHelper.Lang.General.HelloWorld);
+                    ModHelper.LogDev(ModHelper.Lang.Formatter.FormatHelloFormat(a: 999, b: 1, c: 1000));
+                    ModHelper.LogDev(ModHelper.ToStringFromInformation());
                     break;
 
                 default:
