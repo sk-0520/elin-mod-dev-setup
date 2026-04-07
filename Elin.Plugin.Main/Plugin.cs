@@ -5,8 +5,6 @@ using HarmonyLib;
 using System;
 using System.Reflection;
 
-// Mod 用テンプレート組み込み想定
-
 namespace Elin.Plugin.Main
 {
     partial class Plugin
