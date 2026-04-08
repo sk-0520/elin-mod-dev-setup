@@ -36,6 +36,11 @@
 		<RemoveDir Directories="$(ModPath)" />
 	</Target>
 
+	<Target Name="ConvertPreviewImage" AfterTargets="AfterBuild">
+		<Message Text="ConvertPreviewImage: $(AssemblyName)" Importance="Normal" />
+		<Exec Command="powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(SolutionDir)\dev-items\convert-preview-image.ps1&quot; -Source &quot;$(ProjectDir)\@Assets\preview.png&quot; -Out &quot;$(ProjectDir)\@Assets\preview.jpg&quot;" WorkingDirectory="$(SolutionDir)" IgnoreExitCode="false" />
+	</Target>
+
 	<Target Name="ExtractPackageXml" AfterTargets="AfterBuild">
 		<Message Text="ExtractPackageXml: $(AssemblyName)" Importance="Normal" />
 		<Exec Command="powershell -NoProfile -NonInteractive -ExecutionPolicy Bypass -File &quot;$(SolutionDir)\dev-items\extract-package-xml.ps1&quot; -Assembly &quot;$(ProjectDir)\$(OutputPath)$(AssemblyName).dll&quot; -Out &quot;$(ProjectDir)@Assets\package.xml&quot;" WorkingDirectory="$(SolutionDir)" IgnoreExitCode="false" />
