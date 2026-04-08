@@ -14,9 +14,9 @@ try {
 	$encoderParams = New-Object System.Drawing.Imaging.EncoderParameters(1)
 	$encoderParams.Param[0] = New-Object System.Drawing.Imaging.EncoderParameter($encoder, $Quality)
 
-	$encoder = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
+	$jpegCodec = [System.Drawing.Imaging.ImageCodecInfo]::GetImageEncoders() | Where-Object { $_.MimeType -eq 'image/jpeg' }
 
-	$image.Save($Out, $encoder, $encoderParams)
+	$image.Save($Out, $jpegCodec, $encoderParams)
 
 } finally {
 	$image.Dispose()
