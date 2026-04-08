@@ -54,19 +54,19 @@ jobs:
         run: |
           xmllint Elin.Plugin.Main/@Assets/ModHelp/help.xhtml
 
-
   build:
     name: "<Build> Mod"
 
-    needs:
+    needs: &dependence-jobs
       - json
       - xhtml
 
-    runs-on: windows-latest
+    runs-on: &mod-os-image
+      windows-latest
 
     strategy:
       matrix:
-        configuration:
+        configuration: &matrix-configurations
           - Debug
           - Release
 
@@ -76,7 +76,7 @@ jobs:
 
       - name: Checkout infrastructure
         uses: actions/checkout@v6
-        with:
+        with: &checkout-infrastructure
             repository: sk-0520/elin-mod-ci-infrastructure
             path: elin-mod-ci-infrastructure
 
@@ -131,18 +131,13 @@ jobs:
   test:
     name: "<Test> Mod"
 
-    needs:
-      - json
-      - xhtml
+    needs: *dependence-jobs
 
-    runs-on: windows-latest
+    runs-on: *mod-os-image
 
     strategy:
       matrix:
-        configuration:
-          - Debug
-          - Release
-
+        configuration: *matrix-configurations
 
     steps:
       - name: Checkout
@@ -150,9 +145,7 @@ jobs:
 
       - name: Checkout other repo
         uses: actions/checkout@v6
-        with:
-            repository: sk-0520/elin-mod-ci-infrastructure
-            path: elin-mod-ci-infrastructure
+        with: *checkout-infrastructure
 
       - name: Setup CI Module
         shell: pwsh
