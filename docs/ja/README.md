@@ -159,6 +159,12 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
    * ファイルが存在すれば配布ファイルに含まれます
      * ModHelp ディレクトリは配布ファイルに含まれません
      * ModHelp については後述
+   * package.xml
+     * Plugin.json から自動生成されます
+   * preview.png と preview.jpg 
+     * preview.png を原本としてビルド時に preview.jpg が自動生成されます
+     * 最終的には両方が配布物となります
+     * いつか Elin 側で png を拾ってくれるんじゃないかと思っている次第です
  * PluginHelpers/
    * テンプレート提供機能群です
    * 色々絡んでるので消さないでください
