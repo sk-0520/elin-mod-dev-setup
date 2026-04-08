@@ -217,6 +217,16 @@ Plugin.json の情報をもとに以下のクラスが生成されます。
 > [!NOTE]
 > package.xml と `BepInPluginAttribute` との謎結合が解消したくて作られた、適当ソースジェネレータです
 
+#### Plugin.dev.json
+
+Plugin.json のうち、リポジトリに残す価値があまりないものを Plugin.dev.json に定義できます。
+
+現在サポートされているプロパティは以下になります。
+
+* `log`
+
+ソースジェネレーターの正規の読み込みからは逸脱した仕組みで読み込まれるので、リビルドするなどで反映してください。
+
 ### Localization.json
 
 多言語をサポートします。
