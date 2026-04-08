@@ -61,8 +61,7 @@ jobs:
       - json
       - xhtml
 
-    runs-on: &mod-os-image
-      windows-latest
+    runs-on: &mod-os-image windows-latest
 
     strategy:
       matrix:
