@@ -35,6 +35,11 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
 
 ダウンロードしたら適当なディレクトリに展開してください。
 
+#### 自動初期化
+
+initialize.bat を実行して Mod ファイル名を入力すると、Mod 作成に必要な構成が自動的に構築されます。  
+いろいろ考えるのが面倒な場合は実施してください。
+
 ### 開発準備
 
 展開したファイルのうち、 `Directory.Build.props.user` を開き `AssemblyName` を作成したい Mod のファイル名に変更してください。
