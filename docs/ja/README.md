@@ -102,7 +102,6 @@ https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
 
  * 🚮 .github/
    * CI 処理なので消しても問題ないです
-   * あってもプログラムとしては問題ないけど、たぶんあったらダメです
    * 🚮 copilot-instructions.md
      * 本リポジトリにおけるAI用のあれこれなので Mod 側で持ってても意味ないです
  * 🚮 .vscode/
@@ -528,8 +527,9 @@ GitHub Actions の定義をテンプレートとして提供しています。
 
 Windows イメージでガンガン走る点にご注意ください。
 
-> [!WARNING]
-> CI でビルドおよびテストを通すために、お行儀が良くないというか、なんというか、うん、不安な場合は `.github/` を削除してください。
+[sk-0520/elin-mod-ci-infrastructure](https://github.com/sk-0520/elin-mod-ci-infrastructure) を使用して関連アセンブリを適当に解決しています。  
+Elin.dll はインターフェイスのみ適用されており、内部実装は使用できません。
+
 
 ## その他
 
