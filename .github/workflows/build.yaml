@@ -1,6 +1,10 @@
 name: Build
 
-on: push
+on:
+  schedule:
+    - cron: "0 0 * * *"
+  push:
+  workflow_dispatch:
 
 concurrency:
   group: ${{ github.workflow }}-${{ github.ref }}
