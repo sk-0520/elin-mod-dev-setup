@@ -118,9 +118,9 @@ jobs:
           {
             .\dev-items\debug-dll.ps1 -Mode prd -ElinPath $env:ELIN_PATH
           }
-          catch
+          catch(ex)
           {
-            return
+            ex
           }
           throw "not excpeted to be here"
 
