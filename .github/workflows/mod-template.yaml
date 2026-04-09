@@ -9,7 +9,13 @@ jobs:
   initialize:
     name: Initialize
 
-    runs-on: windows-latest
+    runs-on: &mod-os-image windows-latest
+
+    strategy:
+      matrix:
+        configuration: &matrix-configurations
+          - Debug
+          - Release
 
     steps:
       - name: Checkout
@@ -22,7 +28,58 @@ jobs:
           dev-items\initialize.ps1 -ModName "Initialize"
 
       - name: Artifact
+        if: matrix.configuration == 'Release'
         uses: actions/upload-artifact@v7
         with:
-          name: Initialize
+          name: Initialize1
           path: .
+
+      - name: Checkout CI Module
+        uses: actions/checkout@v6
+        with: &checkout-ci-module
+            repository: sk-0520/elin-mod-ci-infrastructure
+            path: elin-mod-ci-infrastructure
+
+      - name: Setup CI Module
+        shell: pwsh
+        run: |
+          # .targets
+          $targetsPath = "Directory.Build.targets.user"
+          $targetsXml = [xml](Get-Content -Path $targetsPath -Encoding UTF8)
+
+          $propertyGroup = $targetsXml.CreateElement("PropertyGroup")
+          $steamPathGroup = $targetsXml.CreateElement("SteamPath")
+          $steamPathGroup.InnerText = "${{ github.workspace }}"
+          $elinPathGroup = $targetsXml.CreateElement("ElinPath")
+          $elinPathGroup.InnerText = '$(SteamPath)\elin-mod-ci-infrastructure\libs'
+          $modPathGroup = $targetsXml.CreateElement("ModPath")
+          $modPathGroup.InnerText = "${{ github.workspace }}\output"
+
+          $propertyGroup.AppendChild($steamPathGroup)
+          $propertyGroup.AppendChild($elinPathGroup)
+          $propertyGroup.AppendChild($modPathGroup)
+
+          $targetsXml.Project.AppendChild($propertyGroup)
+
+          $targetsXml.Save($targetsPath)
+
+          Get-Content -Path $targetsPath -Encoding UTF8
+
+      - name: Build
+        shell: pwsh
+        run: |
+          dotnet build --configuration ${{ matrix.configuration }}
+
+      - name: Artifact
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v7
+        with:
+          name: artifact
+          path: output
+
+      - name: Build
+        shell: pwsh
+        run: |
+          dotnet test --configuration ${{ matrix.configuration }}
+
+
