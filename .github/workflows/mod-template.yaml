@@ -101,9 +101,9 @@ jobs:
           $dllPath = Join-Path -Path $dllDirPath -ChildPath $dllName
           New-Item -Path $dllPath -ItemType File -Force
 
-          Write-Host "DLL_DIR_PATH=$dllDirPath" >> "$GITHUB_ENV"
-          Write-Host "DLL_NAME=$dllName" >> "$GITHUB_ENV"
-          Write-Host "DLL_PATH=$dllPath" >> "$GITHUB_ENV"
+          "DLL_DIR_PATH=$dllDirPath" >> $env:GITHUB_ENV
+          "DLL_NAME=$dllName" >> $env:GITHUB_ENV
+          "DLL_PATH=$dllPath" >> $env:GITHUB_ENV
 
       - name: Prepare DLL
         shell: pwsh
