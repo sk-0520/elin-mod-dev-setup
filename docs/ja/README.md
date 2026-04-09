@@ -104,129 +104,130 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 
 | 印 | 削除可否 |
 |:-:|---|
+| 🗑️ | テンプレート側のみで使用しているものです。消してください |
 | 🚮 | 無くても Mod 作れます |
 | ⚠️ | テンプレート提供機能が Mod に影響を与えるので消さないでください |
 
- * 🚮 .github/
-   * CI 処理なので消しても問題ないです
-     * workflows
-       * 🚮 build.yaml
-         * 簡易的なビルド・テスト実行処理
-         * あった方がいいと思います
-       * 🚮 mod-template.yaml
-         * テンプレート側で本リポジトリをテストするワークフロー
-         * **Mod 開発においては不要な処理となるため消してください**
-   * 🚮 copilot-instructions.md
-     * 本リポジトリにおけるAI用のあれこれなので Mod 側で持ってても意味ないです
- * 🚮 .vscode/
-   * VSCode 設定, ちょっとした用途であった方がいいような、別になくてもいいような
- * ⚠️ dev-items/
-   * テンプレートとして提供するあれこれ機能が入っています
- * 🚮 docs/
-   * この文書が入ってる
- * ⚠️ Elin.Plugin.Generator/
-   * テンプレート提供機能として色々頑張ってます
- * 🚮 Elin.Plugin.Generator.Test/
-   * テンプレート提供側としては必要ですが、使用者側としては不要です
- * ⚠️ Elin.Plugin.Main/
-   * テンプレート提供機能と Mod 実装の入り乱れ
-   * 詳細は後述
- * 🚮 Elin.Plugin.Main.Test/
-   * Elin.Plugin.Main のテスト
-   * なくてもいいけど、あった方が少し安心
- * ⚠️ .editorconfig
-   * 本来なくても OK じゃないとダメなんだけど、諸事情で必要です
- * 🚮 cspell.json
-   * スペルチェック用定義ファイル
-   * なんですが、このファイルを編集することはありません
- * ⚠️ Directory.Build.props
-   * プロジェクト読み込み前の設定一覧
-   * テンプレートとして必須です
- * ⚠️ Directory.Build.props.user
-   * プロジェクト読み込み前の設定一覧(ユーザー設定)
-   * テンプレート機能の追従が難しくなるので props の設定はこちらに記入してください
-   * ここにアセンブリ名を書くようにしたのは本当に悲しい
- * ⚠️ Directory.Build.targets
-   * プロジェクト読み込み後の設定一覧
- * 🚮 Directory.Build.targets.user
-   * プロジェクト読み込み後の設定一覧(ユーザー設定)
-   * テンプレート機能の追従が難しくなるので targets の設定はこちらに記入してください
- * ⚠️ Elin.Plugin.slnx
-   * これをダブルクリックすれば Visual Studio が立ち上がるすごいファイルだよ
- * 🚮 exclusion.dic
-   * スペルチェック用設定ファイル
- * ⚠️ Localization.json
-   * 翻訳文言定義ファイル
-   * 後述
- * ⚠️ Plugin.json
-   * プラグイン定義ファイル
-   * 後述
- * 🚮 README.md
-   * お好きに
+* 🚮 .github/
+  * CI 処理なので消しても問題ないです
+    * workflows
+      * 🚮 build.yaml
+        * 簡易的なビルド・テスト実行処理
+        * あった方がいいと思います
+      * 🗑️ mod-template.yaml
+        * テンプレート側で本リポジトリをテストするワークフロー
+        * **Mod 開発においては不要な処理となるため消してください**
+  * 🗑️ copilot-instructions.md
+    * 本リポジトリにおけるAI用のあれこれなので Mod 側で持ってても意味ないです
+* 🚮 .vscode/
+  * VSCode 設定, ちょっとした用途であった方がいいような、別になくてもいいような
+* ⚠️ dev-items/
+  * テンプレートとして提供するあれこれ機能が入っています
+* 🚮 docs/
+  * この文書が入ってる
+* ⚠️ Elin.Plugin.Generator/
+  * テンプレート提供機能として色々頑張ってます
+* 🚮 Elin.Plugin.Generator.Test/
+  * テンプレート提供側としては必要ですが、使用者側としては不要です
+* ⚠️ Elin.Plugin.Main/
+  * テンプレート提供機能と Mod 実装の入り乱れ
+  * 詳細は後述
+* 🚮 Elin.Plugin.Main.Test/
+  * Elin.Plugin.Main のテスト
+  * なくてもいいけど、あった方が少し安心
+* ⚠️ .editorconfig
+  * 本来なくても OK じゃないとダメなんだけど、諸事情で必要です
+* 🚮 cspell.json
+  * スペルチェック用定義ファイル
+  * なんですが、このファイルを編集することはありません
+* ⚠️ Directory.Build.props
+  * プロジェクト読み込み前の設定一覧
+  * テンプレートとして必須です
+* ⚠️ Directory.Build.props.user
+  * プロジェクト読み込み前の設定一覧(ユーザー設定)
+  * テンプレート機能の追従が難しくなるので props の設定はこちらに記入してください
+  * ここにアセンブリ名を書くようにしたのは本当に悲しい
+* ⚠️ Directory.Build.targets
+  * プロジェクト読み込み後の設定一覧
+* 🚮 Directory.Build.targets.user
+  * プロジェクト読み込み後の設定一覧(ユーザー設定)
+  * テンプレート機能の追従が難しくなるので targets の設定はこちらに記入してください
+* ⚠️ Elin.Plugin.slnx
+  * これをダブルクリックすれば Visual Studio が立ち上がるすごいファイルだよ
+* 🚮 exclusion.dic
+  * スペルチェック用設定ファイル
+* ⚠️ Localization.json
+  * 翻訳文言定義ファイル
+  * 後述
+* ⚠️ Plugin.json
+  * プラグイン定義ファイル
+  * 後述
+* 🚮 README.md
+  * お好きに
 
 ### Elin.Plugin.Main/
 
- * @Assets/
-   * Elin Mod ディレクトリ仕様
-     * https://docs.google.com/document/d/e/2PACX-1vQQ35ofQBT5yILPeZ4c5uMkmGOPMrT12f1vTvfi2dFgrt1T70lr8yMOpRAwZ_3cMvUNRsVR0Cf3qabh/pub
-   * プロジェクトルートに Texture とか置くとソリューションエクスプローラがごちゃつくのでリスト上邪魔にならない名前にしています
-   * ファイルが存在すれば配布ファイルに含まれます
-     * ModHelp ディレクトリは配布ファイルに含まれません
-     * ModHelp については後述
-   * package.xml
-     * Plugin.json から自動生成されます
-   * preview.png と preview.jpg 
-     * preview.png を原本としてビルド時に preview.jpg が自動生成されます
-     * 最終的には両方が配布物となります
-     * いつか Elin 側で png を拾ってくれるんじゃないかと思っている次第です
- * PluginHelpers/
-   * テンプレート提供機能群です
-   * 色々絡んでるので消さないでください
-   * とりあえず後述になりますが、 `ModHelper` だけ使えればいいです
- * Properties/
-   * 後述
- * Samples/
-   * サンプルです
-   * 初めて Mod を作る場合、一通り眺めたら消してください。初めてじゃなければ消してください
- * AssemblyInfo.cs
-   * プロジェクトファイルによる AssemblyInfo.cs 生成は抑制しているのでアセンブリ設定を行う場合はこちらで実施してください
- * Elin.Plugin.Main.csproj
-   * プロジェクトファイル
-   * さわらないでください
-     * Directory.Build.props, Directory.Build.targets との合わせ技でちょっとしんどいので、ほんとさわらないでください
- * Plugin.cs
-   * いわゆるエントリーポイントです
-   * `PatchSample` メソッドは簡単にパッチを充てられない場合のサンプルになってますので、消してください
-   * Mod 開発においては `AwakePlugin`, `OnDestroyPlugin` を編集の起点にして問題ないはずです
- * Plugin.ModTemplate.cs
-   * テンプレートの提供する処理がこちらに記述されています
-     * `Awake`, `OnDestroy` などがその対象です
-     * 命名として `*.ModTemplate.cs` は Mod 開発者コードに混入せざるを得ない実装を可能な限り分離したものになります
+* ⚠️ @Assets/
+  * Elin Mod ディレクトリ仕様
+    * https://docs.google.com/document/d/e2PACX-1vQQ35ofQBT5yILPeZ4c5uMkmGOPMrT12f1vTvfi2dFgrt1T70lr8yMOpRAwZ_3cMvUNRsVR0Cf3qabh/pub
+  * プロジェクトルートに Texture とか置くとソリューションエクスプローラがごちゃつくのでリスト上邪にならない名前にしています
+  * ファイルが存在すれば配布ファイルに含まれます
+    * ModHelp ディレクトリは配布ファイルに含まれません
+    * ModHelp については後述
+  * package.xml
+    * Plugin.json から自動生成されます
+  * preview.png と preview.jpg 
+    * preview.png を原本としてビルド時に preview.jpg が自動生成されます
+    * 最終的には両方が配布物となります
+    * いつか Elin 側で png を拾ってくれるんじゃないかと思っている次第です
+* ⚠️ PluginHelpers/
+  * テンプレート提供機能群です
+  * 色々絡んでるので消さないでください
+  * とりあえず後述になりますが、 `ModHelper` だけ使えればいいです
+* 🚮 Properties/
+  * 後述
+* 🗑️ Samples/
+  * サンプルです
+  * 初めて Mod を作る場合、一通り眺めたら消してください。初めてじゃなければ消してください
+* ⚠️ AssemblyInfo.cs
+  * プロジェクトファイルによる AssemblyInfo.cs 生成は抑制しているのでアセンブリ設定を行う場合はこらで実施してください
+* ⚠️ Elin.Plugin.Main.csproj
+  * プロジェクトファイル
+  * さわらないでください
+    * Directory.Build.props, Directory.Build.targets との合わせ技でちょっとしんどいので、ほんとさらないでください
+* ⚠️ Plugin.cs
+  * いわゆるエントリーポイントです
+  * `PatchSample` メソッドは簡単にパッチを充てられない場合のサンプルになってますので、消してくだい
+  * Mod 開発においては `AwakePlugin`, `OnDestroyPlugin` を編集の起点にして問題ないはずです
+* ⚠️ Plugin.ModTemplate.cs
+  * テンプレートの提供する処理がこちらに記述されています
+    * `Awake`, `OnDestroy` などがその対象です
+    * 命名として `*.ModTemplate.cs` は Mod 開発者コードに混入せざるを得ない実装を可能な限り分離したものになります
 
 ### Plugin.json
 
 プラグインの情報定義を記入してください。
 
- * `$.package`
-   * [package.xml](https://docs.google.com/document/d/e/2PACX-1vQSITB8aYTycrnn3PxxGnPjNZ2_y1G3LDfXjC_PM5S_mTPCh6fv1vcj1bkfPbbUZ88WVb5_7T-62zYc/pub) の定義と同じです
-   * `description`
-     * 説明文は長くなる可能性があるので配列として、1要素1行で定義してください
-   * `tags`
-     * カンマ区切りはしんどいので配列として1要素1タグで定義してください
- * `$.mod`
-   * Mod としての定義です
-     * `version`
-       * Mod のバージョンです
-       * 最終的にアセンブリバージョンに反映されます
-     * `useDebugId`
-       * デバッグビルドした場合の、Mod ID をデバッグ用に変更するか
-       * `true` で問題ないです
-       * `BepInEx` で設定ファイルを出力する場合などに Mod ID が使用されるため、リリース版との競合を避ける目的で使用します
-     * `log`
-       * ログファイルを簡単に出力する場合に出力先を設定してください
-       * デバッグ時のみ使用されます(`define DEBUG`)
-       * 後述の Plugin.dev.json を使用した方が良いです
-         * このプロパティはほぼ設計ミスです
+* `$.package`
+  * [package.xml](https://docs.google.com/document/d/e/2PACX-1vQSITB8aYTycrnn3PxxGnPjNZ2_y1G3LDfXjC_PM5S_mTPCh6fv1vcj1bkfPbbUZ88WVb5_7T-62zYc/pub) の定義と同じです
+  * `description`
+    * 説明文は長くなる可能性があるので配列として、1要素1行で定義してください
+  * `tags`
+    * カンマ区切りはしんどいので配列として1要素1タグで定義してください
+* `$.mod`
+  * Mod としての定義です
+    * `version`
+      * Mod のバージョンです
+      * 最終的にアセンブリバージョンに反映されます
+    * `useDebugId`
+      * デバッグビルドした場合の、Mod ID をデバッグ用に変更するか
+      * `true` で問題ないです
+      * `BepInEx` で設定ファイルを出力する場合などに Mod ID が使用されるため、リリース版との競合を避ける目的で使用します
+    * `log`
+      * ログファイルを簡単に出力する場合に出力先を設定してください
+      * デバッグ時のみ使用されます(`define DEBUG`)
+      * 後述の Plugin.dev.json を使用した方が良いです
+        * このプロパティはほぼ設計ミスです
 
 Plugin.json の情報をもとに以下のクラスが生成されます。
 
