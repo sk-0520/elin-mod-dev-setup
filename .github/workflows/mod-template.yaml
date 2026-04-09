@@ -107,6 +107,10 @@ jobs:
 
       - name: Prepare DLL
         shell: pwsh
+        env:
+          DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}
+          DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}
+          DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}
         run: |
           "DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}"
           "DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}"
