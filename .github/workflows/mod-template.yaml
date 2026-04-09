@@ -82,4 +82,32 @@ jobs:
         run: |
           dotnet test --configuration ${{ matrix.configuration }}
 
+  debug-dll:
+    name: "Debug DLL"
 
+    runs-on: *mod-os-image
+
+    steps:
+      - name: Checkout Mod
+        uses: actions/checkout@v6
+
+      - name: Prepare DLL
+        id: dll
+        shell: pwsh
+        run: |
+          $elinPath = Join-Path -Path "${{ github.workspace }}" -ChildPath "work-elin"
+          $dllDirPath = Join-Path -Path $elinPath -ChildPath "MonoBleedingEdge" | Join-Path -ChildPath "EmbedRuntime"
+          $dllName = "mono-2.0-bdwgc.dll"
+          $dllPath = Join-Path -Path $dllDirPath -ChildPath $dllName
+          New-Item -Path $dllPath -ItemType File -Force
+
+          Write-Host "DLL_DIR_PATH=$dllDirPath" >> "$GITHUB_ENV"
+          Write-Host "DLL_NAME=$dllName" >> "$GITHUB_ENV"
+          Write-Host "DLL_PATH=$dllPath" >> "$GITHUB_ENV"
+
+      - name: Prepare DLL
+        shell: pwsh
+        run: |
+          "DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}"
+          "DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}"
+          "DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}"
