@@ -114,13 +114,11 @@ jobs:
           DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}
           DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}
         run: |
-          try
-          {
+          try {
             .\dev-items\debug-dll.ps1 -Mode prd -ElinPath $env:ELIN_PATH
           }
-          catch($ex)
-          {
-            $ex
+          catch {
+            $_
           }
           throw "not excpeted to be here"
 
