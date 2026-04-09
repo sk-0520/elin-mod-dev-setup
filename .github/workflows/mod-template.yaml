@@ -162,7 +162,7 @@ jobs:
 
           $localDllPath = ".\dev-items\debug-dll\$env:Mode\$env:DLL_NAME"
           $localHash = (Get-FileHash $localDllPath).Hash
-          $targetHash = (Get-FileHash $env:DLL_PATH).Hash
+          $targetHash = (Get-FileHash $env:DLL_PATH).Hash + "#"
           if($localHash -ne $targetHash) {
             throw "DLL hash mismatch. Local: $localHash, Target: $targetHash"
           }
