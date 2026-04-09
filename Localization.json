@@ -13,7 +13,7 @@
     }
   },
   "format": {
-    "helloFormat": {
+    "calcFormat": {
       "JP": "${A} + ${B} = ${C}",
       "EN": "${A} + ${B} = ${C}",
       "CN": "${A} + ${B} = ${C}",

@@ -2,7 +2,7 @@
   "$schema": "./dev-items/Plugin.schema.json",
   "package": {
     "title": "ユーザーに表示される Mod 名",
-    "id": "Please.Edit.Mod.Id",
+    "id": "replace.with.your.mod.id",
     "author": "作者",
     "loadPriority": 100,
     "elinVersion": "0.23.287",
