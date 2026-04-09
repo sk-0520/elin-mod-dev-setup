@@ -77,7 +77,7 @@ jobs:
           name: build
           path: output
 
-      - name: Build
+      - name: Test
         shell: pwsh
         run: |
           dotnet test --configuration ${{ matrix.configuration }}
