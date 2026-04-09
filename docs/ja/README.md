@@ -113,7 +113,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
        * 🚮 build.yaml
          * 簡易的なビルド・テスト実行処理
          * あった方がいいと思います
-       * 🚮 \*.mod-template.yaml
+       * 🚮 mod-template.yaml
          * テンプレート側で本リポジトリをテストするワークフロー
          * **Mod 開発においては不要な処理となるため消してください**
    * 🚮 copilot-instructions.md

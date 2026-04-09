@@ -1,0 +1,207 @@
+name: Mod Template
+
+on:
+  push:
+  workflow_dispatch:
+
+jobs:
+
+  initialize:
+    name: Initialize
+
+    runs-on: &mod-os-image windows-latest
+
+    strategy:
+      matrix:
+        configuration: &matrix-configurations
+          - Debug
+          - Release
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Initialize
+        shell: pwsh
+        # バッチ叩くと死ぬので PowerShell で直接叩く(死ぬのは既知)
+        run: |
+          dev-items\initialize.ps1 -ModName "Initialize"
+
+      - name: Artifact [initialize]
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v7
+        with:
+          name: initialize
+          path: .
+
+      - name: Checkout CI Module
+        uses: actions/checkout@v6
+        with: &checkout-ci-module
+            repository: sk-0520/elin-mod-ci-infrastructure
+            path: elin-mod-ci-infrastructure
+
+      - name: Setup CI Module
+        shell: pwsh
+        run: |
+          # .targets
+          $targetsPath = "Directory.Build.targets.user"
+          $targetsXml = [xml](Get-Content -Path $targetsPath -Encoding UTF8)
+
+          $propertyGroup = $targetsXml.CreateElement("PropertyGroup")
+          $steamPathGroup = $targetsXml.CreateElement("SteamPath")
+          $steamPathGroup.InnerText = "${{ github.workspace }}"
+          $elinPathGroup = $targetsXml.CreateElement("ElinPath")
+          $elinPathGroup.InnerText = '$(SteamPath)\elin-mod-ci-infrastructure\libs'
+          $modPathGroup = $targetsXml.CreateElement("ModPath")
+          $modPathGroup.InnerText = "${{ github.workspace }}\output"
+
+          $propertyGroup.AppendChild($steamPathGroup)
+          $propertyGroup.AppendChild($elinPathGroup)
+          $propertyGroup.AppendChild($modPathGroup)
+
+          $targetsXml.Project.AppendChild($propertyGroup)
+
+          $targetsXml.Save($targetsPath)
+
+          Get-Content -Path $targetsPath -Encoding UTF8
+
+      - name: Build
+        shell: pwsh
+        run: |
+          dotnet build --configuration ${{ matrix.configuration }}
+
+      - name: Artifact [build]
+        if: matrix.configuration == 'Release'
+        uses: actions/upload-artifact@v7
+        with:
+          name: build
+          path: output
+
+      - name: Test
+        shell: pwsh
+        run: |
+          dotnet test --configuration ${{ matrix.configuration }}
+
+  debug-dll-error:
+    name: "Debug DLL Error"
+
+    runs-on: *mod-os-image
+
+    strategy:
+      matrix:
+        mode: &dll-mode
+          - prd
+          - dev
+
+    steps:
+      - name: Checkout Mod
+        uses: actions/checkout@v6
+
+      - name: Setup DLL
+        id: dll
+        shell: pwsh
+        run: &setup-dll |
+          $elinPath = Join-Path -Path "${{ github.workspace }}" -ChildPath "work-elin"
+          $dllDirPath = Join-Path -Path $elinPath -ChildPath "MonoBleedingEdge" | Join-Path -ChildPath "EmbedRuntime"
+          $dllName = "mono-2.0-bdwgc.dll"
+          $dllPath = Join-Path -Path $dllDirPath -ChildPath $dllName
+          New-Item -Path $dllPath -ItemType File -Force
+
+          "ELIN_PATH=$elinPath" >> $env:GITHUB_OUTPUT
+          "DLL_DIR_PATH=$dllDirPath" >> $env:GITHUB_OUTPUT
+          "DLL_NAME=$dllName" >> $env:GITHUB_OUTPUT
+          "DLL_PATH=$dllPath" >> $env:GITHUB_OUTPUT
+
+      - name: "${{ matrix.mode }}"
+        shell: pwsh
+        env: &apply-dll-env
+          ELIN_PATH: ${{ steps.dll.outputs.ELIN_PATH }}
+          DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}
+          DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}
+          DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}
+          Mode: ${{ matrix.mode }}
+        run: |
+          try {
+            .\dev-items\debug-dll.ps1 -Mode $env:Mode -ElinPath $env:ELIN_PATH
+          }
+          catch {
+            $_
+            return
+          }
+          throw "到達不可"
+
+  debug-dll-success:
+    name: "Debug DLL Success"
+
+    needs:
+      - debug-dll-error
+
+    runs-on: *mod-os-image
+
+    strategy:
+      matrix:
+        mode: *dll-mode
+
+    steps:
+      - name: Checkout Mod
+        uses: actions/checkout@v6
+
+      - name: Setup DLL
+        id: dll
+        shell: pwsh
+        run: *setup-dll
+
+      - name: "Prepare DLL"
+        shell: pwsh
+        env: *apply-dll-env
+        run: |
+          .\dev-items\debug-dll.ps1 -Mode prepare -ElinPath $env:ELIN_PATH
+
+      - name: "${{ matrix.mode }}"
+        shell: pwsh
+        env: *apply-dll-env
+        run: |
+          .\dev-items\debug-dll.ps1 -Mode $env:Mode -ElinPath $env:ELIN_PATH
+
+          $localDllPath = ".\dev-items\debug-dll\$env:Mode\$env:DLL_NAME"
+          $localHash = (Get-FileHash $localDllPath).Hash
+          $targetHash = (Get-FileHash $env:DLL_PATH).Hash
+          if($localHash -ne $targetHash) {
+            throw "DLL hash mismatch. Local: $localHash, Target: $targetHash"
+          }
+
+  debug-dll:
+    name: "Debug DLL"
+
+    needs:
+      - debug-dll-success
+
+    runs-on: *mod-os-image
+
+    steps:
+      - name: Checkout Mod
+        uses: actions/checkout@v6
+
+      - name: Setup DLL
+        id: dll
+        shell: pwsh
+        run: *setup-dll
+
+      - name: "Prepare DLL"
+        shell: pwsh
+        env: *apply-dll-env
+        run: |
+          .\dev-items\debug-dll.ps1 -Mode prepare -ElinPath $env:ELIN_PATH
+
+      - name: "Check DLL"
+        shell: pwsh
+        env: *apply-dll-env
+        run: |
+          # prepare でバックアップ DLL が作成されているので比較
+          $backupDllPath = Get-Item -Path "$env:DLL_PATH.*.bak" | Select-Object -ExpandProperty FullName
+          $backupDllHash = (Get-FileHash $backupDllPath).Hash
+          $currentDllHash = (Get-FileHash $env:DLL_PATH).Hash
+          if($backupDllHash -ne $currentDllHash) {
+            throw "DLL hash mismatch. Backup: $backupDllHash, Current: $currentDllHash"
+          }
+
