@@ -133,6 +133,9 @@ jobs:
   debug-dll-success:
     name: "Debug DLL Success"
 
+    needs:
+      - debug-dll-error
+
     runs-on: *mod-os-image
 
     strategy:
@@ -169,6 +172,9 @@ jobs:
 
   debug-dll:
     name: "Debug DLL"
+
+    needs:
+      - debug-dll-success
 
     runs-on: *mod-os-image
 
