@@ -114,7 +114,7 @@ jobs:
 
       - name: "${{ matrix.mode }}: ERROR"
         shell: pwsh
-        env: &setup-dll-env
+        env: &apply-dll-env
           ELIN_PATH: ${{ steps.dll.outputs.ELIN_PATH }}
           DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}
           DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}
@@ -150,12 +150,13 @@ jobs:
 
       - name: "Prepare DLL"
         shell: pwsh
+        env: *apply-dll-env
         run: |
           .\dev-items\debug-dll.ps1 -Mode prepare -ElinPath $env:ELIN_PATH
 
       - name: "${{ matrix.mode }}: ERROR"
         shell: pwsh
-        env: *setup-dll-env
+        env: *apply-dll-env
         run: |
           .\dev-items\debug-dll.ps1 -Mode $env:Mode -ElinPath $env:ELIN_PATH
 
