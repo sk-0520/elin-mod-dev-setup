@@ -25,7 +25,16 @@ jobs:
         shell: pwsh
         # バッチ叩くと死ぬので PowerShell で直接叩く(死ぬのは既知)
         run: |
+          if(!(Test-Path -Path "Elin.Plugin.slnx")) {
+            throw "ソリューションファイルがない(到達不可)"
+          }
           dev-items\initialize.ps1 -ModName "Initialize"
+          if(Test-Path -Path "Elin.Plugin.slnx") {
+            throw "既存ソリューションファイルが残っている"
+          }
+          if(!(Test-Path -Path "Initialize.slnx")) {
+            throw "新しいソリューションファイルが作成されていない"
+          }
 
       - name: Artifact [initialize]
         if: matrix.configuration == 'Release'
