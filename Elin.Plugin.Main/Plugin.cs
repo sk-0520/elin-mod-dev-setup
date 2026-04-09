@@ -1,7 +1,6 @@
-#if DEBUG
-#endif
 using Elin.Plugin.Main.Samples;
 using HarmonyLib;
+using System;
 using System.Diagnostics;
 using System.Reflection;
 
