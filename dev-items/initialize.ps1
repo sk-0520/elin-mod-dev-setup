@@ -9,7 +9,7 @@ $projectDirectoryPath = Join-Path -Path $PSScriptRoot -ChildPath ".."
 # 不要ファイル破棄
 $removeItems = @(
 	(Join-Path -Path ".github" -ChildPath "copilot-instructions.md"),
-	(Join-Path -Path ".github" -ChildPath | Join-Path -ChildPath "workflows" | Join-Path -ChildPath "mod-template.yaml"),
+	(Join-Path -Path ".github" -ChildPath "workflows" | Join-Path -ChildPath "mod-template.yaml"),
 	"docs",
 	"Elin.Plugin.Generator.Test",
 	"initialize.bat"
