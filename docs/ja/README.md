@@ -154,6 +154,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * テンプレート機能の追従が難しくなるので targets の設定はこちらに記入してください
 * ⚠️ Elin.Plugin.slnx
   * これをダブルクリックすれば Visual Studio が立ち上がるすごいファイルだよ
+  * ソリューションファイルが存在することが大事なので、ファイル名自体は自由に変更してください
 * 🚮 exclusion.dic
   * スペルチェック用設定ファイル
 * ⚠️ Localization.json

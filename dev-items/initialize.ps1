@@ -34,3 +34,6 @@ $solutionXml.SelectNodes("//*/Project") | ForEach-Object {
 	}
 }
 $solutionXml.Save($solutionPath)
+# ソリューションファイル名の変更
+$newSolutionPath = Join-Path -Path $projectDirectoryPath -ChildPath "$ModName.slnx"
+Rename-Item -Path $solutionPath -NewName $newSolutionPath
