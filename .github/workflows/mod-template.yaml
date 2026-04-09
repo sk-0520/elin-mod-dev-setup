@@ -112,7 +112,7 @@ jobs:
           "DLL_NAME=$dllName" >> $env:GITHUB_OUTPUT
           "DLL_PATH=$dllPath" >> $env:GITHUB_OUTPUT
 
-      - name: "${{ matrix.mode }}: ERROR"
+      - name: "${{ matrix.mode }}"
         shell: pwsh
         env: &apply-dll-env
           ELIN_PATH: ${{ steps.dll.outputs.ELIN_PATH }}
@@ -128,7 +128,7 @@ jobs:
             $_
             return
           }
-          throw "not excpeted to be here"
+          throw "到達不可"
 
   debug-dll-success:
     name: "Debug DLL Success"
@@ -157,7 +157,7 @@ jobs:
         run: |
           .\dev-items\debug-dll.ps1 -Mode prepare -ElinPath $env:ELIN_PATH
 
-      - name: "${{ matrix.mode }}: ERROR"
+      - name: "${{ matrix.mode }}"
         shell: pwsh
         env: *apply-dll-env
         run: |
