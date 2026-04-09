@@ -16,9 +16,10 @@ jobs:
         uses: actions/checkout@v6
 
       - name: Initialize
-        shell: cmd
+        shell: pwsh
+        # バッチ叩くと死ぬので PowerShell で直接叩く(死ぬのは既知)
         run: |
-          echo ModName | initialize.bat
+          dev-items\initialize.ps1 -ModName "Initialize"
 
       - name: Artifact
         uses: actions/upload-artifact@v7
