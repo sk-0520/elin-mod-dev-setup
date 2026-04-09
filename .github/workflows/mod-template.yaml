@@ -83,9 +83,15 @@ jobs:
           dotnet test --configuration ${{ matrix.configuration }}
 
   debug-dll:
-    name: "Debug DLL"
+    name: "Debug DLL Error"
 
     runs-on: *mod-os-image
+
+    strategy:
+      matrix:
+        configuration:
+          - prd
+          - dev
 
     steps:
       - name: Checkout Mod
@@ -94,7 +100,7 @@ jobs:
       - name: Prepare DLL
         id: dll
         shell: pwsh
-        run: |
+        run: &prepare-dll |
           $elinPath = Join-Path -Path "${{ github.workspace }}" -ChildPath "work-elin"
           $dllDirPath = Join-Path -Path $elinPath -ChildPath "MonoBleedingEdge" | Join-Path -ChildPath "EmbedRuntime"
           $dllName = "mono-2.0-bdwgc.dll"
@@ -106,19 +112,21 @@ jobs:
           "DLL_NAME=$dllName" >> $env:GITHUB_OUTPUT
           "DLL_PATH=$dllPath" >> $env:GITHUB_OUTPUT
 
-      - name: "PRD: ERROR"
+      - name: "${{ matrix.configuration }}: ERROR"
         shell: pwsh
         env:
           ELIN_PATH: ${{ steps.dll.outputs.ELIN_PATH }}
           DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}
           DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}
           DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}
+          Configuration: ${{ matrix.configuration }}
         run: |
           try {
-            .\dev-items\debug-dll.ps1 -Mode prd -ElinPath $env:ELIN_PATH
+            .\dev-items\debug-dll.ps1 -Mode $env:Configuration -ElinPath $env:ELIN_PATH
           }
           catch {
             $_
+            return
           }
           throw "not excpeted to be here"
 
