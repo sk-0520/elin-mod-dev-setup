@@ -27,11 +27,11 @@ jobs:
         run: |
           dev-items\initialize.ps1 -ModName "Initialize"
 
-      - name: Artifact
+      - name: Artifact [initialize]
         if: matrix.configuration == 'Release'
         uses: actions/upload-artifact@v7
         with:
-          name: Initialize1
+          name: initialize
           path: .
 
       - name: Checkout CI Module
@@ -70,11 +70,11 @@ jobs:
         run: |
           dotnet build --configuration ${{ matrix.configuration }}
 
-      - name: Artifact
+      - name: Artifact [build]
         if: matrix.configuration == 'Release'
         uses: actions/upload-artifact@v7
         with:
-          name: artifact
+          name: build
           path: output
 
       - name: Build
