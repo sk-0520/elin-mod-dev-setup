@@ -89,7 +89,7 @@ jobs:
 
     strategy:
       matrix:
-        configuration:
+        mode: &dll-mode
           - prd
           - dev
 
@@ -112,17 +112,17 @@ jobs:
           "DLL_NAME=$dllName" >> $env:GITHUB_OUTPUT
           "DLL_PATH=$dllPath" >> $env:GITHUB_OUTPUT
 
-      - name: "${{ matrix.configuration }}: ERROR"
+      - name: "${{ matrix.mode }}: ERROR"
         shell: pwsh
-        env:
+        env: &setup-dll-env
           ELIN_PATH: ${{ steps.dll.outputs.ELIN_PATH }}
           DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}
           DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}
           DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}
-          Configuration: ${{ matrix.configuration }}
+          Mode: ${{ matrix.mode }}
         run: |
           try {
-            .\dev-items\debug-dll.ps1 -Mode $env:Configuration -ElinPath $env:ELIN_PATH
+            .\dev-items\debug-dll.ps1 -Mode $env:Mode -ElinPath $env:ELIN_PATH
           }
           catch {
             $_
@@ -137,9 +137,7 @@ jobs:
 
     strategy:
       matrix:
-        configuration:
-          - prd
-          - dev
+        mode: *dll-mode
 
     steps:
       - name: Checkout Mod
@@ -150,23 +148,18 @@ jobs:
         shell: pwsh
         run: *setup-dll
 
-      - name: ""
+      - name: "Prepare DLL"
         shell: pwsh
         run: |
-          .\dev-items\debug-dll.ps1 -Mode $prepare -ElinPath $env:ELIN_PATH
+          .\dev-items\debug-dll.ps1 -Mode prepare -ElinPath $env:ELIN_PATH
 
-      - name: "${{ matrix.configuration }}: ERROR"
+      - name: "${{ matrix.mode }}: ERROR"
         shell: pwsh
-        env:
-          ELIN_PATH: ${{ steps.dll.outputs.ELIN_PATH }}
-          DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}
-          DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}
-          DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}
-          Configuration: ${{ matrix.configuration }}
+        env: *setup-dll-env
         run: |
-          .\dev-items\debug-dll.ps1 -Mode $env:Configuration -ElinPath $env:ELIN_PATH
+          .\dev-items\debug-dll.ps1 -Mode $env:Mode -ElinPath $env:ELIN_PATH
 
-          $localDllPath = .\dev-items\debug-dll\$env:Configuration\$env:DLL_NAME
+          $localDllPath = .\dev-items\debug-dll\$env:Mode\$env:DLL_NAME
           $localHash = (Get-FileHash $localDllPath).Hash
           $targetHash = (Get-FileHash $env:DLL_PATH).Hash
           if($localHash -ne $targetHash) {
