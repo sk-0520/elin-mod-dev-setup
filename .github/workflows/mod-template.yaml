@@ -101,20 +101,26 @@ jobs:
           $dllPath = Join-Path -Path $dllDirPath -ChildPath $dllName
           New-Item -Path $dllPath -ItemType File -Force
 
+          "ELIN_PATH=$elinPath" >> $env:GITHUB_OUTPUT
           "DLL_DIR_PATH=$dllDirPath" >> $env:GITHUB_OUTPUT
           "DLL_NAME=$dllName" >> $env:GITHUB_OUTPUT
           "DLL_PATH=$dllPath" >> $env:GITHUB_OUTPUT
 
-      - name: Prepare DLL
+      - name: "PRD: ERROR"
         shell: pwsh
         env:
+          ELIN_PATH: ${{ steps.dll.outputs.ELIN_PATH }}
           DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}
           DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}
           DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}
         run: |
-          "DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}"
-          "DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}"
-          "DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}"
-          "DLL_DIR_PATH: $env:DLL_DIR_PATH"
-          "DLL_NAME: $env:DLL_NAME"
-          "DLL_PATH: $env:DLL_PATH"
+          try
+          {
+            .\dev-items\debug-dll.ps1 -Mode prd -ElinPath $env:ELIN_PATH
+          }
+          catch
+          {
+            return
+          }
+          throw "not excpeted to be here"
+
