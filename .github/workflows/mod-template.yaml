@@ -115,6 +115,6 @@ jobs:
           "DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}"
           "DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}"
           "DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}"
-          "DLL_DIR_PATH: $env:DLL_DIR_PATH
-          "DLL_NAME: $env:DLL_NAME
-          "DLL_PATH: $env:DLL_PATH
+          "DLL_DIR_PATH: $env:DLL_DIR_PATH"
+          "DLL_NAME: $env:DLL_NAME"
+          "DLL_PATH: $env:DLL_PATH"
