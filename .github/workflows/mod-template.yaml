@@ -166,3 +166,36 @@ jobs:
           if($localHash -ne $targetHash) {
             throw "DLL hash mismatch. Local: $localHash, Target: $targetHash"
           }
+
+  debug-dll:
+    name: "Debug DLL"
+
+    runs-on: *mod-os-image
+
+    steps:
+      - name: Checkout Mod
+        uses: actions/checkout@v6
+
+      - name: Setup DLL
+        id: dll
+        shell: pwsh
+        run: *setup-dll
+
+      - name: "Prepare DLL"
+        shell: pwsh
+        env: *apply-dll-env
+        run: |
+          .\dev-items\debug-dll.ps1 -Mode prepare -ElinPath $env:ELIN_PATH
+
+      - name: "Check DLL"
+        shell: pwsh
+        env: *apply-dll-env
+        run: |
+          # prepare でバックアップ DLL が作成されているので比較
+          $backupDllPath = Get-Item -Path "$env:DLL_PATH.*.bak" | Select-Object -ExpandProperty FullName
+          $backupDllHash = (Get-FileHash $backupDllPath).Hash
+          $currentDllHash = (Get-FileHash $env:DLL_PATH).Hash
+          if($backupDllHash -ne $currentDllHash) {
+            throw "DLL hash mismatch. Backup: $backupDllHash, Current: $currentDllHash"
+          }
+
