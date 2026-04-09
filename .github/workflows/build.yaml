@@ -73,9 +73,9 @@ jobs:
       - name: Checkout Mod
         uses: actions/checkout@v6
 
-      - name: Checkout infrastructure
+      - name: Checkout CI Module
         uses: actions/checkout@v6
-        with: &checkout-infrastructure
+        with: &checkout-ci-module
             repository: sk-0520/elin-mod-ci-infrastructure
             path: elin-mod-ci-infrastructure
 
@@ -118,7 +118,7 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
-          dotnet build -c ${{ matrix.configuration }}
+          dotnet build --configuration ${{ matrix.configuration }}
 
       - name: Artifact
         if: matrix.configuration == 'Release'
@@ -139,12 +139,12 @@ jobs:
         configuration: *matrix-configurations
 
     steps:
-      - name: Checkout
+      - name: Checkout Mod
         uses: actions/checkout@v6
 
-      - name: Checkout other repo
+      - name: Checkout CI Module
         uses: actions/checkout@v6
-        with: *checkout-infrastructure
+        with: *checkout-ci-module
 
       - name: Setup CI Module
         shell: pwsh
@@ -153,5 +153,5 @@ jobs:
       - name: Test
         shell: pwsh
         run: |
-          dotnet test  -c ${{ matrix.configuration }}
+          dotnet test --configuration ${{ matrix.configuration }}
 
