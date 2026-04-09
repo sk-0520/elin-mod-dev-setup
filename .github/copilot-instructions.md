@@ -29,7 +29,7 @@
   * Elin.Plugin.Generator のテストコード
 * Elin.Plugin.Main
   * Mod 開発者が実装する Mod の本体
-  * 最低芸のサンプルと、テンプレート提供機能が格納されている
+  * 最低限のサンプルと、テンプレート提供機能が格納されている
 * Elin.Plugin.Main.Test
   * Elin.Plugin.Main のテストコード
   * テストコード自体は Mod 開発者が必要に応じて実装する
