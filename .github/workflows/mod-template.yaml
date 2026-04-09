@@ -82,7 +82,7 @@ jobs:
         run: |
           dotnet test --configuration ${{ matrix.configuration }}
 
-  debug-dll:
+  debug-dll-error:
     name: "Debug DLL Error"
 
     runs-on: *mod-os-image
@@ -97,10 +97,10 @@ jobs:
       - name: Checkout Mod
         uses: actions/checkout@v6
 
-      - name: Prepare DLL
+      - name: Setup DLL
         id: dll
         shell: pwsh
-        run: &prepare-dll |
+        run: &setup-dll |
           $elinPath = Join-Path -Path "${{ github.workspace }}" -ChildPath "work-elin"
           $dllDirPath = Join-Path -Path $elinPath -ChildPath "MonoBleedingEdge" | Join-Path -ChildPath "EmbedRuntime"
           $dllName = "mono-2.0-bdwgc.dll"
@@ -130,3 +130,45 @@ jobs:
           }
           throw "not excpeted to be here"
 
+  debug-dll-success:
+    name: "Debug DLL Success"
+
+    runs-on: *mod-os-image
+
+    strategy:
+      matrix:
+        configuration:
+          - prd
+          - dev
+
+    steps:
+      - name: Checkout Mod
+        uses: actions/checkout@v6
+
+      - name: Setup DLL
+        id: dll
+        shell: pwsh
+        run: *setup-dll
+
+      - name: ""
+        shell: pwsh
+        run: |
+          .\dev-items\debug-dll.ps1 -Mode $prepare -ElinPath $env:ELIN_PATH
+
+      - name: "${{ matrix.configuration }}: ERROR"
+        shell: pwsh
+        env:
+          ELIN_PATH: ${{ steps.dll.outputs.ELIN_PATH }}
+          DLL_DIR_PATH: ${{ steps.dll.outputs.DLL_DIR_PATH }}
+          DLL_NAME: ${{ steps.dll.outputs.DLL_NAME }}
+          DLL_PATH: ${{ steps.dll.outputs.DLL_PATH }}
+          Configuration: ${{ matrix.configuration }}
+        run: |
+          .\dev-items\debug-dll.ps1 -Mode $env:Configuration -ElinPath $env:ELIN_PATH
+
+          $localDllPath = .\dev-items\debug-dll\$env:Configuration\$env:DLL_NAME
+          $localHash = (Get-FileHash $localDllPath).Hash
+          $targetHash = (Get-FileHash $env:DLL_PATH).Hash
+          if($localHash -ne $targetHash) {
+            throw "DLL hash mismatch. Local: $localHash, Target: $targetHash"
+          }
