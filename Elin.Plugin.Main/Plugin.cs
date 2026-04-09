@@ -1,8 +1,8 @@
 #if DEBUG
-using Elin.Plugin.Main.Samples;
 #endif
+using Elin.Plugin.Main.Samples;
 using HarmonyLib;
-using System;
+using System.Diagnostics;
 using System.Reflection;
 
 namespace Elin.Plugin.Main
@@ -17,10 +17,8 @@ namespace Elin.Plugin.Main
         /// <param name="harmony"></param>
         private void AwakePlugin(Harmony harmony)
         {
-#if DEBUG
             // サンプル用パッチ処理のため削除してください
             PatchSample(harmony);
-#endif
             //NOP
         }
 
@@ -34,8 +32,14 @@ namespace Elin.Plugin.Main
 
         #endregion
 
+        #region sample
 
-#if DEBUG
+        /// <summary>
+        /// サンプル用パッチ処理です。
+        /// </summary>
+        /// <remarks>不要なので削除してください。</remarks>
+        /// <param name="harmony"></param>
+        [Conditional("DEBUG")]
         void PatchSample(Harmony harmony)
         {
             // ネストクラスのフル名（例: Namespace.SourceElement+Row）
@@ -50,7 +54,7 @@ namespace Elin.Plugin.Main
 
             harmony.Patch(original, prefix: new HarmonyMethod(prefix));
         }
-#endif
 
+        #endregion
     }
 }

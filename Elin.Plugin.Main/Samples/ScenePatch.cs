@@ -1,11 +1,10 @@
 using Elin.Plugin.Main.PluginHelpers;
 using HarmonyLib;
 
-#if DEBUG
 namespace Elin.Plugin.Main.Samples
 {
     [HarmonyPatch(typeof(Scene))]
-    public class ScenePatch
+    internal class ScenePatch
     {
         #region function
 
@@ -34,4 +33,3 @@ namespace Elin.Plugin.Main.Samples
     }
 
 }
-#endif
