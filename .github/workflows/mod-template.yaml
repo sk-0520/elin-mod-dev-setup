@@ -160,7 +160,7 @@ jobs:
         run: |
           .\dev-items\debug-dll.ps1 -Mode $env:Mode -ElinPath $env:ELIN_PATH
 
-          $localDllPath = .\dev-items\debug-dll\$env:Mode\$env:DLL_NAME
+          $localDllPath = ".\dev-items\debug-dll\$env:Mode\$env:DLL_NAME"
           $localHash = (Get-FileHash $localDllPath).Hash
           $targetHash = (Get-FileHash $env:DLL_PATH).Hash
           if($localHash -ne $targetHash) {
