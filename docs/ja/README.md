@@ -22,6 +22,8 @@
 > [!TIP]
 > <https://learn.microsoft.com/ja-jp/visualstudio/gamedev/unity/get-started/visual-studio-tools-for-unity?pivots=windows>
 
+<!-- MD028 -->
+
 > [!NOTE]
 > デバッガをアタッチしない場合、この拡張機能は不要です。
 
