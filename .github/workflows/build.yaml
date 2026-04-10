@@ -99,15 +99,15 @@ jobs:
       - name: Setup CI Module
         shell: pwsh
         run: &setup-ci-module |
-          # .props
-          $propsPath = "Directory.Build.props.user"
-          $propsXml = [xml](Get-Content -Path $propsPath -Encoding UTF8)
+          # .Assembly.xml
+          $asmPath = "Elin.Plugin.Main.Assembly.xml"
+          $asmXml = [xml](Get-Content -Path $asmPath -Encoding UTF8)
 
-          if($propsXml.Project.PropertyGroup.AssemblyName -eq "********") {
-            $propsXml.Project.PropertyGroup.AssemblyName = "Elin.Mod.Dev.Sample"
+          if($asmXml.Project.PropertyGroup.AssemblyName -eq "********") {
+            $asmXml.Project.PropertyGroup.AssemblyName = "Elin.Mod.Dev.Sample"
           }
 
-          $propsXml.Save($propsPath)
+          $asmXml.Save($asmPath)
 
           # .targets
           $targetsPath = "Directory.Build.targets.user"
@@ -129,7 +129,7 @@ jobs:
 
           $targetsXml.Save($targetsPath)
 
-          Get-Content -Path $propsPath -Encoding UTF8
+          Get-Content -Path $asmPath -Encoding UTF8
           Get-Content -Path $targetsPath -Encoding UTF8
 
       - name: Build

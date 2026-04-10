@@ -4,7 +4,7 @@
 $ErrorActionPreference = 'Stop'
 Set-StrictMode -Version Latest
 
-$projectDirectoryPath = Join-Path -Path $PSScriptRoot -ChildPath ".."
+$rootDirectoryPath = Join-Path -Path $PSScriptRoot -ChildPath ".."
 
 # 不要ファイル破棄
 $removeItems = @(
@@ -15,18 +15,18 @@ $removeItems = @(
 	"initialize.bat"
 )
 foreach ($item in $removeItems) {
-	$itemPath = Join-Path -Path $projectDirectoryPath -ChildPath $item
+	$itemPath = Join-Path -Path $rootDirectoryPath -ChildPath $item
 	Remove-Item -Path $itemPath -Recurse -Force
 }
 
 # Mod 名をプロジェクトファイルに反映
-$projectPropsPath = Join-Path -Path $projectDirectoryPath -ChildPath "Directory.Build.props.user"
-[xml]$propsXml = Get-Content -LiteralPath $projectPropsPath -Raw -Encoding UTF8
-$propsXml.Project.PropertyGroup.AssemblyName = $ModName
-$propsXml.Save($projectPropsPath)
+$projectAsmPath = Join-Path -Path $rootDirectoryPath -ChildPath "Elin.Plugin.Main.Assembly.xml"
+[xml]$asmXml = Get-Content -LiteralPath $projectAsmPath -Raw -Encoding UTF8
+$asmXml.Project.PropertyGroup.AssemblyName = $ModName
+$asmXml.Save($projectAsmPath)
 
 # ソリューションから削除プロジェクトの破棄
-$solutionPath = Join-Path -Path $projectDirectoryPath -ChildPath "Elin.Plugin.slnx"
+$solutionPath = Join-Path -Path $rootDirectoryPath -ChildPath "Elin.Plugin.slnx"
 [xml]$solutionXml = Get-Content -LiteralPath $solutionPath -Raw -Encoding UTF8
 $solutionXml.SelectNodes("//*/Project") | ForEach-Object {
 	if ($_.Path -eq "Elin.Plugin.Generator.Test/Elin.Plugin.Generator.Test.csproj") {
