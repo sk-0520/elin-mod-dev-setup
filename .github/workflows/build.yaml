@@ -76,6 +76,7 @@ jobs:
     needs: &dependence-jobs
       - json
       - xhtml
+      - markdown
 
     runs-on: &mod-os-image windows-latest
 
