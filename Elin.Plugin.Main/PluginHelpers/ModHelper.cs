@@ -49,7 +49,7 @@ namespace Elin.Plugin.Main.PluginHelpers
         /// <summary>
         /// プラグイン用言語ヘルパー。
         /// </summary>
-        /// <remarks>言語定義は Localize.json を編集することで自動的に適用されます。</remarks>
+        /// <remarks>言語定義は Localization.json を編集することで自動的に適用されます。</remarks>
         internal static PluginLocalization Lang { get; } = new PluginLocalization();
 
         /// <summary>
