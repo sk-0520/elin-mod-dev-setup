@@ -45,22 +45,17 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 
 ### 開発準備
 
-展開したファイルのうち、 `Directory.Build.props.user` を開き `AssemblyName` を作成したい Mod のファイル名に変更してください。
+展開したファイルのうち、 `Elin.Plugin.Main.Assembly.xml` を開き `AssemblyName` を作成したい Mod のファイル名に変更してください。
 
 ```diff
-<Project>
- <!-- Directory.Build.props から使用されます -->
- <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Elin.Plugin.Main'">
-  <!--
-		Mod のプログラム名を指定
-		Mod フォルダ名と DLL 名に使用されます
-		-->
+<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+ <PropertyGroup>
+  <!-- Mod のアセンブリ名を指定してください -->
 -  <AssemblyName>********</AssemblyName>
-+  <AssemblyName>MyMod</AssemblyName>
++  <AssemblyName>MyModName</AssemblyName>
  </PropertyGroup>
-
- <!-- 以下自由に設定してください -->
 </Project>
+
 ```
 
 > [!CAUTION]
@@ -70,7 +65,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 
 ### Steam/Elin のパス確認
 
-`Directory.Build.targets` にてそれぞれのパスが定義されています。
+`Directory.Build.targets.mod-template` にてそれぞれのパスが定義されています。
 
 ```xml
 <PropertyGroup>
@@ -81,7 +76,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 ```
 
 ユーザー環境によっては変更する必要があります。  
-その場合は、 `Directory.Build.targets.user` に変更すべき設定を定義してください。
+その場合は、 `Directory.Build.targets` に変更すべき設定を定義してください。
 
 ```xml
 <PropertyGroup>
@@ -140,17 +135,13 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * スペルチェック用定義ファイル
   * なんですが、このファイルを編集することはありません
 * ⚠️ Directory.Build.props
-  * プロジェクト読み込み前の設定一覧
-  * テンプレートとして必須です
-* ⚠️ Directory.Build.props.user
   * プロジェクト読み込み前の設定一覧(ユーザー設定)
-  * テンプレート機能の追従が難しくなるので props の設定はこちらに記入してください
-  * ここにアセンブリ名を書くようにしたのは本当に悲しい
+* ⚠️ Directory.Build.props.mod-template
+  * Directory.Build.props に対するテンプレート設定です
 * ⚠️ Directory.Build.targets
-  * プロジェクト読み込み後の設定一覧
-* 🚮 Directory.Build.targets.user
   * プロジェクト読み込み後の設定一覧(ユーザー設定)
-  * テンプレート機能の追従が難しくなるので targets の設定はこちらに記入してください
+* ⚠️ Directory.Build.targets.mod-template
+  * Directory.Build.targets に対するテンプレート設定です
 * ⚠️ Elin.Plugin.slnx
   * これをダブルクリックすれば Visual Studio が立ち上がるすごいファイルだよ
   * ソリューションファイルが存在することが大事なので、ファイル名自体は自由に変更してください
