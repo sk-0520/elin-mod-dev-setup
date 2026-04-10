@@ -110,7 +110,7 @@ jobs:
           $asmXml.Save($asmPath)
 
           # .targets
-          $targetsPath = "Directory.Build.targets.user"
+          $targetsPath = "Directory.Build.targets"
           $targetsXml = [xml](Get-Content -Path $targetsPath -Encoding UTF8)
 
           $propertyGroup = $targetsXml.CreateElement("PropertyGroup")
