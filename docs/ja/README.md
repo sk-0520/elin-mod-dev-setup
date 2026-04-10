@@ -94,7 +94,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 
 どこまでがテンプレート側持ちなのかを把握しておいた方が良いのですが、基本的にメインプロジェクトとメインプロジェクトから操作可能なものが Mod 開発者側保守範囲と考えてもらえれば多分問題ないかと思います。
 
-### ルート一覧
+### ファイル一覧
 
 | 印 | 削除可否 |
 | :-: | --- |
@@ -131,6 +131,8 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * なくてもいいけど、あった方が少し安心
 * ⚠️ .editorconfig
   * 本来なくても OK じゃないとダメなんだけど、諸事情で必要です
+* 🚮 .markdownlint.json
+  * なくてもいいけど削除する場合は GHA 側も修正してください
 * 🚮 cspell.json
   * スペルチェック用定義ファイル
   * なんですが、このファイルを編集することはありません
@@ -147,6 +149,8 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * ソリューションファイルが存在することが大事なので、ファイル名自体は自由に変更してください
 * 🚮 exclusion.dic
   * スペルチェック用設定ファイル
+* 🗑️ initialize.bat
+  * 初期化処理を行っていないのであれば完全に不要というか間違って実行すると面倒なので消してください
 * ⚠️ Localization.json
   * 翻訳文言定義ファイル
   * 後述
@@ -161,7 +165,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 * ⚠️ @Assets/
   * Elin Mod ディレクトリ仕様
     * <https://docs.google.com/document/d/e2PACX-1vQQ35ofQBT5yILPeZ4c5uMkmGOPMrT12f1vTvfi2dFgrt1T70lr8yMOpRAwZ_3cMvUNRsVR0Cf3qabh/pub>
-  * プロジェクトルートに Texture とか置くとソリューションエクスプローラがごちゃつくのでリスト上邪にならない名前にしています
+  * プロジェクトルートに Texture とか置くとソリューションエクスプローラがごちゃつくのでリスト上邪魔にならない名前にしています
   * ファイルが存在すれば配布ファイルに含まれます
     * ModHelp ディレクトリは配布ファイルに含まれません
     * ModHelp については後述
@@ -181,14 +185,14 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * サンプルです
   * 初めて Mod を作る場合、一通り眺めたら消してください。初めてじゃなければ消してください
 * ⚠️ AssemblyInfo.cs
-  * プロジェクトファイルによる AssemblyInfo.cs 生成は抑制しているのでアセンブリ設定を行う場合はこらで実施してください
+  * プロジェクトファイルによる AssemblyInfo.cs 生成は抑制しているのでアセンブリ設定を行う場合はこちらで実施してください
 * ⚠️ Elin.Plugin.Main.csproj
   * プロジェクトファイル
   * さわらないでください
-    * Directory.Build.props, Directory.Build.targets との合わせ技でちょっとしんどいので、ほんとさらないでください
+    * Directory.Build.props, Directory.Build.targets との合わせ技でちょっとしんどいので、ほんとさわらないでください
 * ⚠️ Plugin.cs
   * いわゆるエントリーポイントです
-  * `PatchSample` メソッドは簡単にパッチを充てられない場合のサンプルになってますので、消してくだい
+  * `PatchSample` メソッドは簡単にパッチを充てられない場合のサンプルになってますので、消してください
   * Mod 開発においては `AwakePlugin`, `OnDestroyPlugin` を編集の起点にして問題ないはずです
 * ⚠️ Plugin.ModTemplate.cs
   * テンプレートの提供する処理がこちらに記述されています
