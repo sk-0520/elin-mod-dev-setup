@@ -54,6 +54,21 @@ jobs:
         run: |
           xmllint Elin.Plugin.Main/@Assets/ModHelp/help.xhtml
 
+  markdown:
+    name: "<Validation> Markdown"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Mod
+        uses: actions/checkout@v6
+
+      - name: "*.md"
+        if: ${{ hashFiles('**/*.md') != '' }}
+        uses: DavidAnson/markdownlint-cli2-action@v23
+        with:
+          globs: '**/*.md'
+
   build:
     name: "<Build> Mod"
 
