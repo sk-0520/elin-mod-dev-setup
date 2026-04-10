@@ -9,8 +9,8 @@
 
 このテンプレートでは Mod 開発環境を整えることに焦点を当てているため、実際の作り方は説明しませんので Elin の Mod 作成における関連文書は以下を参考にしてください。
 
- * https://ylvapedia.wiki/wiki/Elin:Mod
- * https://elin-modding-resources.github.io/Elin.Docs/
+* <https://ylvapedia.wiki/wiki/Elin:Mod>
+* <https://elin-modding-resources.github.io/Elin.Docs/>
 
 ## 始め方
 
@@ -22,4 +22,3 @@
 
 * Visual Studio が好きなので VSCode は扱いません
 * 書いている人間も Mod 初心者なので、実装が変かもしれません
-

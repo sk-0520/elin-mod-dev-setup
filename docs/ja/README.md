@@ -8,7 +8,7 @@
 
 以下からインストール
 
-https://visualstudio.microsoft.com
+<https://visualstudio.microsoft.com>
 
 .NET 及び .NET Framework での開発ができるようになるはず。
 
@@ -19,9 +19,10 @@ https://visualstudio.microsoft.com
  1. ![ツールと機能を取得](images/dev-environment/tool-menu.png)
  1. ![Unity によるゲーム開発](images/dev-environment/unity.png)
 
-
 > [!TIP]
-> https://learn.microsoft.com/ja-jp/visualstudio/gamedev/unity/get-started/visual-studio-tools-for-unity?pivots=windows
+> <https://learn.microsoft.com/ja-jp/visualstudio/gamedev/unity/get-started/visual-studio-tools-for-unity?pivots=windows>
+
+<!-- MD028 -->
 
 > [!NOTE]
 > デバッガをアタッチしない場合、この拡張機能は不要です。
@@ -30,10 +31,10 @@ https://visualstudio.microsoft.com
 
 ### ダウンロード
 
-https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip
+<https://github.com/sk-0520/elin-mod-dev-setup/archive/refs/heads/main.zip>
 
- * ZIP でダウンロードすることを推奨します
- * git clone からの使用はテンプレート側での修正と競合する可能性があるため推奨しません
+* ZIP でダウンロードすることを推奨します
+* git clone からの使用はテンプレート側での修正と競合する可能性があるため推奨しません
 
 ダウンロードしたら適当なディレクトリに展開してください。
 
@@ -48,17 +49,17 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 
 ```diff
 <Project>
-	<!-- Directory.Build.props から使用されます -->
-	<PropertyGroup Condition="'$(MSBuildProjectName)' == 'Elin.Plugin.Main'">
-		<!--
+ <!-- Directory.Build.props から使用されます -->
+ <PropertyGroup Condition="'$(MSBuildProjectName)' == 'Elin.Plugin.Main'">
+  <!--
 		Mod のプログラム名を指定
 		Mod フォルダ名と DLL 名に使用されます
 		-->
--		<AssemblyName>********</AssemblyName>
-+		<AssemblyName>MyMod</AssemblyName>
-	</PropertyGroup>
+-  <AssemblyName>********</AssemblyName>
++  <AssemblyName>MyMod</AssemblyName>
+ </PropertyGroup>
 
-	<!-- 以下自由に設定してください -->
+ <!-- 以下自由に設定してください -->
 </Project>
 ```
 
@@ -66,7 +67,6 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 > 本工程を実施しないとビルドできません
 
 ここで設定されたアセンブリ名は、最終的な Mod ファイル名およびディレクトリ名として扱われるため、ファイル名として扱える文字列だけを使用してください。
-
 
 ### Steam/Elin のパス確認
 
@@ -90,7 +90,6 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 </PropertyGroup>
 ```
 
-
 ## Mod テンプレートのファイル構成と提供機能
 
 ### テンプレート提供ファイルと Mod 開発者変更可能ファイル
@@ -103,7 +102,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 ### ルート一覧
 
 | 印 | 削除可否 |
-|:-:|---|
+| :-: | --- |
 | 🗑️ | テンプレート側のみで使用しているものです。消してください |
 | 🚮 | 無くても Mod 作れます |
 | ⚠️ | テンプレート提供機能が Mod に影響を与えるので消さないでください |
@@ -170,14 +169,14 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 
 * ⚠️ @Assets/
   * Elin Mod ディレクトリ仕様
-    * https://docs.google.com/document/d/e2PACX-1vQQ35ofQBT5yILPeZ4c5uMkmGOPMrT12f1vTvfi2dFgrt1T70lr8yMOpRAwZ_3cMvUNRsVR0Cf3qabh/pub
+    * <https://docs.google.com/document/d/e2PACX-1vQQ35ofQBT5yILPeZ4c5uMkmGOPMrT12f1vTvfi2dFgrt1T70lr8yMOpRAwZ_3cMvUNRsVR0Cf3qabh/pub>
   * プロジェクトルートに Texture とか置くとソリューションエクスプローラがごちゃつくのでリスト上邪にならない名前にしています
   * ファイルが存在すれば配布ファイルに含まれます
     * ModHelp ディレクトリは配布ファイルに含まれません
     * ModHelp については後述
   * package.xml
     * Plugin.json から自動生成されます
-  * preview.png と preview.jpg 
+  * preview.png と preview.jpg
     * preview.png を原本としてビルド時に preview.jpg が自動生成されます
     * 最終的には両方が配布物となります
     * いつか Elin 側で png を拾ってくれるんじゃないかと思っている次第です
@@ -296,7 +295,6 @@ Json 側のプロパティ名はキャメル形式ですが、C#側で使用す�
 > [!NOTE]
 > いざやってみるとパスカル形式で定義できたほうが便利な気がしたので、将来的に緩和するかもしれません。
 
-
 #### `$.format`
 
 書式付き文言を定義していきます。
@@ -343,11 +341,11 @@ Elin の言語設定を英語に変えて再度呼び出すと「Departing in 10
 
 設定できる言語は以下の通りです。
 
- * JP
- * EN
- * CN
- * ZHTW
- * KR
+* JP
+* EN
+* CN
+* ZHTW
+* KR
 
 ただし Elin 本体は JP/EN のみ、公式サポートとしては CN のみが提供されているため、それ以外の言語の挙動については不明です。
 
@@ -357,29 +355,29 @@ Elin の言語設定を英語に変えて再度呼び出すと「Departing in 10
 
 おもに使用するのは以下くらいです。
 
- * `ModHelper.Logger`
-   * プラグインとして正式にログを出力する窓口です
- * `ModHelper.Lang`
-   * 前述の言語処理周りとなります
- * `ModHelper.Elin`
-   * Elin 本体処理のヘルパーになります
-   * が、テンプレート提供機能としては何もないに等しいです
- * `ModHelper.MessageDev`
-   * 開発時のみメッセージログを表示します
-   * メッセージが表示できる場合のみ使用してください
- * `ModHelper.WriteDev`
-   * 開発時のみファイルログを出力します
-   * ファイルは Plugin.json の mod.log となります
- * `ModHelper.LogDev`
-   * 開発時のみメッセージログ + ファイルログを出力します
-   * メッセージが表示できる場合のみ使用してください
- * `ModHelper.LogNotExpected`
-   * Mod が想定しない場合に内容をログ出力します
-   * これは非デバッグ版でも有効です
- * `ModHelper.LogNotify`
-   * Mod からプレイヤーに通知するようなログを出力します
-   * これは非デバッグ版でも有効です
-   * ゲームプレイで表示するようなものではなく、ユーザー起因で発生したエラーなどを伝えるもので、ゲーム体験を損なう前提で使用します
+* `ModHelper.Logger`
+  * プラグインとして正式にログを出力する窓口です
+* `ModHelper.Lang`
+  * 前述の言語処理周りとなります
+* `ModHelper.Elin`
+  * Elin 本体処理のヘルパーになります
+  * が、テンプレート提供機能としては何もないに等しいです
+* `ModHelper.MessageDev`
+  * 開発時のみメッセージログを表示します
+  * メッセージが表示できる場合のみ使用してください
+* `ModHelper.WriteDev`
+  * 開発時のみファイルログを出力します
+  * ファイルは Plugin.json の mod.log となります
+* `ModHelper.LogDev`
+  * 開発時のみメッセージログ + ファイルログを出力します
+  * メッセージが表示できる場合のみ使用してください
+* `ModHelper.LogNotExpected`
+  * Mod が想定しない場合に内容をログ出力します
+  * これは非デバッグ版でも有効です
+* `ModHelper.LogNotify`
+  * Mod からプレイヤーに通知するようなログを出力します
+  * これは非デバッグ版でも有効です
+  * ゲームプレイで表示するようなものではなく、ユーザー起因で発生したエラーなどを伝えるもので、ゲーム体験を損なう前提で使用します
 
 ## 設定クラスの BepInEx.Configuration サポート
 
@@ -413,13 +411,13 @@ public class MyModRootConfig
 
 ので、テンプレートでは以下の制約を満たした場合にこれを簡略化する機能を提供します。
 
- * 依存する設定クラスは全て同じ名前空間(現在のテンプレート実装上の制約)
- * `BepInEx.Configuration.ConfigEntry` で使用可能な型のみに限定する
- * 値型プロパティは `virtual` にする
- * クラス型プロパティは非 `virtual` にする
-   * 実装メモ: 別にこの制約はいらんかったなぁ
- * 各設定クラスは `sealed` しない
- * 設定のルートは `partial` にする
+* 依存する設定クラスは全て同じ名前空間(現在のテンプレート実装上の制約)
+* `BepInEx.Configuration.ConfigEntry` で使用可能な型のみに限定する
+* 値型プロパティは `virtual` にする
+* クラス型プロパティは非 `virtual` にする
+  * 実装メモ: 別にこの制約はいらんかったなぁ
+* 各設定クラスは `sealed` しない
+* 設定のルートは `partial` にする
 
 以下のように変更します。
 
@@ -501,8 +499,6 @@ override int IntValue
 
 なお、 `IgnorePluginConfigAttribute` をプロパティに設定することでそのプロパティはこの置き換え処理は実施されません。
 
-
-
 ## デバッグ
 
 > [!WARNING]
@@ -546,7 +542,6 @@ Visual Studio のスタートアッププロジェクトが「Elin.Plugin.Main�
 > [!NOTE]
 > 大枠の仕組みは手で作ったけど、しんどくなって残りは AI に作らせたから、バグってたらすまぬ。
 
-
 ## GitHub Actions
 
 GitHub Actions の定義をテンプレートとして提供しています。
@@ -557,31 +552,26 @@ Windows イメージでガンガン走る点にご注意ください。
 [sk-0520/elin-mod-ci-infrastructure](https://github.com/sk-0520/elin-mod-ci-infrastructure) を使用して関連アセンブリを適当に解決しています。  
 Elin.dll はインターフェイスのみ適用されており、内部実装は使用できません。
 
-
 ## その他
 
 ### Elin.Plugin.Main のディレクトリ名は変更可能か
 
- * 変更しない想定でテンプレートを作成しています
- * 変更する場合は `Elin.Plugin.Main` を grep して必要箇所をそれぞれ置き換えてください
+* 変更しない想定でテンプレートを作成しています
+* 変更する場合は `Elin.Plugin.Main` を grep して必要箇所をそれぞれ置き換えてください
 
 ### Localization.json の変更が反映されない
 
- * エラーが発生している場合は記述を確認してください
-   * 特に `$.format` 辺りはチェック処理が色々あるのでエラーになりやすいです
- * エラーがない場合、Visual Studio の再起動を試してみてください
+* エラーが発生している場合は記述を確認してください
+  * 特に `$.format` 辺りはチェック処理が色々あるのでエラーになりやすいです
+* エラーがない場合、Visual Studio の再起動を試してみてください
 
 ### テンプレートを使用した Mod の著作権は誰に帰属するか
 
- * あなたに帰属します
- * 諸事情でライセンスを設定できていない状態です([issue#1](https://github.com/sk-0520/elin-mod-dev-setup/issues/1))
-   * 将来的にライセンスを設定したとしても WTFPL です
+* あなたに帰属します
+* 諸事情でライセンスを設定できていない状態です([issue#1](https://github.com/sk-0520/elin-mod-dev-setup/issues/1))
+  * 将来的にライセンスを設定したとしても WTFPL です
 
 ### テンプレートに追従って具体的にどうすれば？
 
- * ZIP 落としてきて既存のファイルに上書きして diff 確認するくらいしか手段はないです、はい
- * テンプレートを使った Mod 開発はその取得時のバージョンと一蓮托生する気持ちで取り組んだ方が精神衛生上良いかもしれません
-
-
-
-
+* ZIP 落としてきて既存のファイルに上書きして diff 確認するくらいしか手段はないです、はい
+* テンプレートを使った Mod 開発はその取得時のバージョンと一蓮托生する気持ちで取り組んだ方が精神衛生上良いかもしれません

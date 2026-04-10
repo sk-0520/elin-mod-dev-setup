@@ -8,15 +8,15 @@
 * 不明な点があれば、質問を投げかけること
 * 可能な限り関連ソースを精査せよ
 
-# このリポジトリについて
+## このリポジトリについて
 
 * 本リポジトリは、ゲーム Elin の Mod 作成を支援するためのテンプレートとなる
-  * Elin: https://store.steampowered.com/app/2135150/Elin
+  * Elin: <https://store.steampowered.com/app/2135150/Elin>
   * Mod
-    * https://ylvapedia.wiki/wiki/Elin:Mod
-    * https://elin-modding-resources.github.io/Elin.Docs
+    * <https://ylvapedia.wiki/wiki/Elin:Mod>
+    * <https://elin-modding-resources.github.io/Elin.Docs>
 
-# ファイル構成
+## ファイル構成
 
 * dev-items
   * テンプレート側提供の各種定義・実行処理を格納
@@ -33,4 +33,3 @@
 * Elin.Plugin.Main.Test
   * Elin.Plugin.Main のテストコード
   * テストコード自体は Mod 開発者が必要に応じて実装する
-
