@@ -1,5 +1,4 @@
 <Project>
-	<!-- 独自項目追加は Directory.Build.props.user を使用してください -->
 
 	<PropertyGroup>
 		<PlatformTarget>AnyCPU</PlatformTarget>
