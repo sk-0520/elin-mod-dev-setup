@@ -1,8 +1,10 @@
 {
     "html.format.wrapAttributes": "force-expand-multiline",
-    "markdownlint.configFile": "../.markdownlint.json",
+    "markdownlint.configFile": ".markdownlint.json",
+    "markdownlint.run": "onType",
     "[markdown]": {
         "editor.formatOnSave": true,
-        "editor.formatOnPaste": true
+        "editor.formatOnPaste": true,
+        "editor.defaultFormatter": "DavidAnson.vscode-markdownlint",
     },
 }
