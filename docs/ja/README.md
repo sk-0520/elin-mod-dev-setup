@@ -161,7 +161,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 * ⚠️ @Assets/
   * Elin Mod ディレクトリ仕様
     * <https://docs.google.com/document/d/e2PACX-1vQQ35ofQBT5yILPeZ4c5uMkmGOPMrT12f1vTvfi2dFgrt1T70lr8yMOpRAwZ_3cMvUNRsVR0Cf3qabh/pub>
-  * プロジェクトルートに Texture とか置くとソリューションエクスプローラがごちゃつくのでリスト上邪にならない名前にしています
+  * プロジェクトルートに Texture とか置くとソリューションエクスプローラがごちゃつくのでリスト上邪魔にならない名前にしています
   * ファイルが存在すれば配布ファイルに含まれます
     * ModHelp ディレクトリは配布ファイルに含まれません
     * ModHelp については後述
@@ -181,14 +181,14 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * サンプルです
   * 初めて Mod を作る場合、一通り眺めたら消してください。初めてじゃなければ消してください
 * ⚠️ AssemblyInfo.cs
-  * プロジェクトファイルによる AssemblyInfo.cs 生成は抑制しているのでアセンブリ設定を行う場合はこらで実施してください
+  * プロジェクトファイルによる AssemblyInfo.cs 生成は抑制しているのでアセンブリ設定を行う場合はこちらで実施してください
 * ⚠️ Elin.Plugin.Main.csproj
   * プロジェクトファイル
   * さわらないでください
-    * Directory.Build.props, Directory.Build.targets との合わせ技でちょっとしんどいので、ほんとさらないでください
+    * Directory.Build.props, Directory.Build.targets との合わせ技でちょっとしんどいので、ほんとさわらないでください
 * ⚠️ Plugin.cs
   * いわゆるエントリーポイントです
-  * `PatchSample` メソッドは簡単にパッチを充てられない場合のサンプルになってますので、消してくだい
+  * `PatchSample` メソッドは簡単にパッチを充てられない場合のサンプルになってますので、消してください
   * Mod 開発においては `AwakePlugin`, `OnDestroyPlugin` を編集の起点にして問題ないはずです
 * ⚠️ Plugin.ModTemplate.cs
   * テンプレートの提供する処理がこちらに記述されています
