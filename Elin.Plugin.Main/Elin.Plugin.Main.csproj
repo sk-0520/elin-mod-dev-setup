@@ -2,6 +2,8 @@
 <Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
 	<Sdk Name="Microsoft.NET.Sdk" />
 
+	<Import Project="$(SolutionDir)Elin.Plugin.Main.Assembly" />
+
 	<PropertyGroup>
 		<TargetFramework>netstandard2.0</TargetFramework>
 		<GenerateAssemblyInfo>false</GenerateAssemblyInfo>
@@ -52,7 +54,7 @@
 
 	<Target Name="CopyFiles" AfterTargets="AfterBuild" DependsOnTargets="ConvertPreviewImage;BuildModHelp">
 		<RemoveDir Directories="$(ModPath)" />
-		
+
 		<MakeDir Directories="$(ModPath)" />
 
 		<ItemGroup>
