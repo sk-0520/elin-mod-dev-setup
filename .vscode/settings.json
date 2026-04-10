@@ -1,3 +1,8 @@
 {
-    "html.format.wrapAttributes": "force-expand-multiline"
+    "html.format.wrapAttributes": "force-expand-multiline",
+    "markdownlint.configFile": "../.markdownlint.json",
+    "[markdown]": {
+        "editor.formatOnSave": true,
+        "editor.formatOnPaste": true
+    },
 }
