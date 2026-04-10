@@ -8,8 +8,8 @@
 
 ## ルール
 
-| TAG | ModHelp |説明 |
-|---|---|---|
+| TAG | ModHelp | 説明 |
+| --- | --- | --- |
 | `help:page` | - | ページ単位のブロックとして使用 |
 | `help:title` | `$` | ページのタイトル |
 | `help:p` | - | 論理的な行 |
@@ -23,7 +23,7 @@
 | `help:item` | ・ | リストアイテム |
 | `help:qa` | - | Q&A |
 | `help:q` | `{Q` | 質問 |
-| `help:a` | `{A` |  答え |
+| `help:a` | `{A` | 答え |
 | `help:link` | `{link` | リンク |
 | `help:image` | `{image` | 画像(@Assets/Texture 参照) |
 | `help:br` | - | 改行 |
