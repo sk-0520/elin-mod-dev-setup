@@ -29,6 +29,9 @@ jobs:
   initialize:
     name: Initialize
 
+    needs:
+      - assembly-name
+
     runs-on: *mod-os-image
 
     strategy:

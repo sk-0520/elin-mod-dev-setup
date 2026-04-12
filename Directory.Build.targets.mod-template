@@ -1,4 +1,4 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
 	<PropertyGroup>
 		<!-- props 時点ではアセンブリ名がない -->
 		<DocumentationFile>$(OutputPath)$(AssemblyName).xml</DocumentationFile>
