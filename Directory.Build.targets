@@ -1,4 +1,4 @@
-<Project xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+<Project>
 	<!-- テンプレート側設定項目 -->
 	<Import Project="Directory.Build.targets.mod-template" />
 	<!-- Mod 開発者側設定項目 -->
