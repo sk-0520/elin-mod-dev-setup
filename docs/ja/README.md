@@ -137,13 +137,18 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * スペルチェック用定義ファイル
   * なんですが、このファイルを編集することはありません
 * ⚠️ Directory.Build.props
-  * プロジェクト読み込み前の設定一覧(ユーザー設定)
+  * プロジェクト読み込み前の設定一覧(Mod 設定)
 * ⚠️ Directory.Build.props.mod-template
   * Directory.Build.props に対するテンプレート設定です
 * ⚠️ Directory.Build.targets
-  * プロジェクト読み込み後の設定一覧(ユーザー設定)
+  * プロジェクト読み込み後の設定一覧(Mod 設定)
 * ⚠️ Directory.Build.targets.mod-template
   * Directory.Build.targets に対するテンプレート設定です
+* ⚠️ Directory.Packages.props
+  * NuGet!
+  * <https://learn.microsoft.com/nuget/consume-packages/central-package-management>
+* ⚠️ Elin.Plugin.Main.Assembly.xml
+  * アセンブリ名定義ファイルです
 * ⚠️ Elin.Plugin.slnx
   * これをダブルクリックすれば Visual Studio が立ち上がるすごいファイルだよ
   * ソリューションファイルが存在することが大事なので、ファイル名自体は自由に変更してください
@@ -159,6 +164,16 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * 後述
 * 🚮 README.md
   * お好きに
+
+#### 開発時専用設定ファイル
+
+以下ファイルを配置することで Mod 開発者環境のみで MSBuild に設定を流し込めます。
+
+* Directory.Build.props.dev.xml
+* Directory.Build.targets.dev.xml
+
+> [!NOTE]
+> Directory.Build.props と Directory.Build.targets で一生迷走してんな。
 
 ### Elin.Plugin.Main/
 
