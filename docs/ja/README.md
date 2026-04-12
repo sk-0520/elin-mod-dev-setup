@@ -144,6 +144,11 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * プロジェクト読み込み後の設定一覧(Mod 設定)
 * ⚠️ Directory.Build.targets.mod-template
   * Directory.Build.targets に対するテンプレート設定です
+* ⚠️ Directory.Packages.props
+  * NuGet!
+  * <https://learn.microsoft.com/nuget/consume-packages/central-package-management>
+* ⚠️ Elin.Plugin.Main.Assembly.xml
+  * アセンブリ名定義ファイルです
 * ⚠️ Elin.Plugin.slnx
   * これをダブルクリックすれば Visual Studio が立ち上がるすごいファイルだよ
   * ソリューションファイルが存在することが大事なので、ファイル名自体は自由に変更してください
