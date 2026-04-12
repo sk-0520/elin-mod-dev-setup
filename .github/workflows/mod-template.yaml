@@ -6,10 +6,30 @@ on:
 
 jobs:
 
+  assembly-name:
+    name: Assembly Name
+
+    runs-on: &mod-os-image windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v6
+
+      - name: Get Assembly Name
+        shell: pwsh
+        id: assembly-name
+        run: |
+          $asmPath = "Elin.Plugin.Main.Assembly.xml"
+          $asmXml = [xml](Get-Content -Path $asmPath -Encoding UTF8)
+          $assemblyNameNode = $asmXml.Project.PropertyGroup.AssemblyName
+          if($assemblyNameNode -ne '********') {
+            throw "テンプレなので動く名前でコミットしちゃダメなのです"
+          }
+
   initialize:
     name: Initialize
 
-    runs-on: &mod-os-image windows-latest
+    runs-on: *mod-os-image
 
     strategy:
       matrix:
