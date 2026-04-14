@@ -58,6 +58,11 @@ namespace Elin.Plugin.Main.PluginHelpers
         internal static ElinHelper Elin { get; } = new ElinHelper();
 
         /// <summary>
+        /// 共通的な処理。
+        /// </summary>
+        internal static CommonHelper Common { get; } = new CommonHelper();
+
+        /// <summary>
         /// メッセージ出力可能なシーンか。
         /// </summary>
         public static bool CanOutputMessage => Scene.scene.mode switch
