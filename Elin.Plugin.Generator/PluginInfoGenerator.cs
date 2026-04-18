@@ -1,6 +1,5 @@
 using Microsoft.CodeAnalysis;
 using System;
-using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Text.Json;
@@ -264,10 +263,10 @@ namespace Elin.Plugin.Generator
                     {{sourceBuilder.Xml.Build(g => g.Remarks([
                         g.Paragraph("アップロードしたModの公開範囲を指定できます。指定できる値は以下の通りです。"),
                         g.List(XmlDocumentListType.Bullet, [
-                            new KeyValuePair<string,string>("Public", ""),
-                            new KeyValuePair<string,string>("Unlisted", ""),
-                            new KeyValuePair<string,string>("Private", ""),
-                            new KeyValuePair<string,string>("FriendsOnly", ""),
+                            "Public",
+                            "Unlisted",
+                            "Private",
+                            "FriendsOnly",
                         ])
                     ]))}}
                     public static string Visibility { get; set; } = {{sourceBuilder.ToStringLiteral(define.Package.Visibility ?? "Public")}};
@@ -276,10 +275,10 @@ namespace Elin.Plugin.Generator
                 internal static class Mod
                 {
                     {{docHeader("mod", "name")}}
-                    /// <remarks>
-                    /// <para>MOD の内部名です。</para>
-                    /// <para>アセンブリ名を参照しています。</para>
-                    /// </remarks>
+                    {{sourceBuilder.Xml.Build(g => g.Remarks([
+                        "MOD の内部名です。",
+                        "アセンブリ名を参照しています。"
+                    ]))}}
                     public const string Name = {{sourceBuilder.ToStringLiteral(macro.AssemblyName)}};
                     {{docHeader("mod", "version")}}
                     {{sourceBuilder.Xml.Build(g => g.Remarks([

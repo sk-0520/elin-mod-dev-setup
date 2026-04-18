@@ -557,11 +557,16 @@ namespace Elin.Plugin.Generator
             return new XmlDocumentElement("summary", [new XmlDocumentText(content, XmlBuilder)], XmlBuilder);
         }
 
-        public XmlDocumentElement Param(string name, string content)
+        public XmlDocumentElement Param(string name, IEnumerable<IXmlDocumentNode> nodes)
         {
-            var element = new XmlDocumentElement("param", [new XmlDocumentText(content, XmlBuilder)], XmlBuilder);
+            var element = new XmlDocumentElement("param", GetCollection(nodes), XmlBuilder);
             element.Attributes["name"] = name;
             return element;
+        }
+
+        public XmlDocumentElement Param(string name, string content)
+        {
+            return Param(name, [new XmlDocumentText(content, XmlBuilder)]);
         }
 
         public XmlDocumentElement Paragraph(string content)
@@ -632,7 +637,7 @@ namespace Elin.Plugin.Generator
             return SeeAlsoCore("href", href, content);
         }
 
-        private XmlDocumentElement ListCore(string type, KeyValuePair<IXmlDocumentNode, IXmlDocumentNode>? header, IEnumerable<KeyValuePair<IXmlDocumentNode, IXmlDocumentNode>> items)
+        private XmlDocumentElement ListCore(string type, KeyValuePair<IXmlDocumentNode, IXmlDocumentNode>? header, IEnumerable<KeyValuePair<IXmlDocumentNode, IXmlDocumentNode?>> items)
         {
             var children = new List<IXmlDocumentNode>();
             if (header.HasValue)
@@ -644,7 +649,6 @@ namespace Elin.Plugin.Generator
                     [
                         new XmlDocumentElement("term", [t], XmlBuilder),
                         new XmlDocumentElement("description", [d], XmlBuilder),
-                        header.Value.Value
                     ],
                     XmlBuilder
                 );
@@ -657,12 +661,11 @@ namespace Elin.Plugin.Generator
                 var d = item.Value;
                 var element = new XmlDocumentElement(
                     "item",
-                    [
+                    header.HasValue && d is not null ? [
                         new XmlDocumentElement("term", [t], XmlBuilder),
                         new XmlDocumentElement("description", [d], XmlBuilder),
-                        item.Value
-                    ],
-                    XmlBuilder
+                    ] : [t],
+                XmlBuilder
                 );
                 children.Add(element);
             }
@@ -676,8 +679,39 @@ namespace Elin.Plugin.Generator
         public XmlDocumentElement List(XmlDocumentListType listType, IEnumerable<KeyValuePair<string, string>> items)
         {
             var type = listType == XmlDocumentListType.Bullet ? "bullet" : "number";
-            var itemNodes = items.Select(a => new KeyValuePair<IXmlDocumentNode, IXmlDocumentNode>(new XmlDocumentText(a.Key, XmlBuilder), new XmlDocumentText(a.Value, XmlBuilder)));
+            var itemNodes = items.Select(a => new KeyValuePair<IXmlDocumentNode, IXmlDocumentNode?>(new XmlDocumentText(a.Key, XmlBuilder), new XmlDocumentText(a.Value, XmlBuilder)));
             return ListCore(type, default, itemNodes);
+        }
+
+        public XmlDocumentElement List(XmlDocumentListType listType, IEnumerable<IXmlDocumentNode> nodes)
+        {
+            var type = listType == XmlDocumentListType.Bullet ? "bullet" : "number";
+            var itemNodes = nodes.Select(a => new KeyValuePair<IXmlDocumentNode, IXmlDocumentNode?>(a, null));
+            return ListCore(type, default, itemNodes);
+        }
+
+        public XmlDocumentElement List(XmlDocumentListType listType, IEnumerable<string> items)
+        {
+            return List(listType, items.Select(a => new XmlDocumentText(a, XmlBuilder)));
+        }
+
+        public XmlDocumentElement Table(KeyValuePair<string, string> header, IEnumerable<KeyValuePair<string, string>> items)
+        {
+            var headerNode = new KeyValuePair<IXmlDocumentNode, IXmlDocumentNode>(new XmlDocumentText(header.Key, XmlBuilder), new XmlDocumentText(header.Value, XmlBuilder));
+            var itemNodes = items.Select(a => new KeyValuePair<IXmlDocumentNode, IXmlDocumentNode?>(new XmlDocumentText(a.Key, XmlBuilder), new XmlDocumentText(a.Value, XmlBuilder)));
+            return ListCore("table", headerNode, itemNodes);
+        }
+
+        public XmlDocumentElement Returns(string content)
+        {
+            return new XmlDocumentElement("returns", [new XmlDocumentText(content, XmlBuilder)], XmlBuilder);
+        }
+
+        public XmlDocumentElement InheritDoc(string cref)
+        {
+            var result = new XmlDocumentElement("inheritdoc", [], XmlBuilder);
+            result.Attributes["cref"] = cref;
+            return result;
         }
 
         #endregion
