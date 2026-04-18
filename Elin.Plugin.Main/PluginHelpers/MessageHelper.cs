@@ -75,11 +75,17 @@ namespace Elin.Plugin.Main.PluginHelpers
                 return;
             }
 
-            // TODO: とりあえず全部 Post に投げ込んでいるが、同期スレッドで実行している場合の分岐とかあった方がいい, 一旦今はこれでいい
-            Context.Post(static a =>
+            if (Context == SynchronizationContext.Current)
             {
-                ((Action)a)();
-            }, action);
+                action();
+            }
+            else
+            {
+                Context.Post(static a =>
+                {
+                    ((Action)a)();
+                }, action);
+            }
         }
 
         /// <summary>
@@ -104,12 +110,30 @@ namespace Elin.Plugin.Main.PluginHelpers
             return result;
         }
 
+        /// <summary>
+        /// 一行出力。
+        /// </summary>
+        /// <remarks>
+        /// <para>コンテキストを考慮しない。</para>
+        /// <para><see cref="DoMessage"/>内で使用することを想定。</para>
+        /// </remarks>
+        /// <param name="message">出力するメッセージ。</param>
+        /// <seealso cref="OutputLine(string)"/>
         public void OutputLineWithoutContext(string message)
         {
             Msg.SayRaw(message);
             Msg.NewLine();
         }
 
+        /// <summary>
+        /// 一行出力。
+        /// </summary>
+        /// <remarks>
+        /// <para>コンテキストを考慮する。</para>
+        /// <para>とりあえずログ出力程度のノリならこちらを使用する。</para>
+        /// </remarks>
+        /// <param name="message">出力するメッセージ。</param>
+        /// <seealso cref="OutputLineWithoutContext(string)"/>
         public void OutputLine(string message)
         {
             DoMessage(() =>

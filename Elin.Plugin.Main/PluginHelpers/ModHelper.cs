@@ -40,10 +40,17 @@ namespace Elin.Plugin.Main.PluginHelpers
         /// <see cref="BepInEx"/>の提供するロガー。
         /// </summary>
         public static ManualLogSource Logger { get; private set; } = default!;
-        public static SynchronizationContext Context { get; private set; } = default!;
+        private static SynchronizationContext Context { get; set; } = default!;
+        /// <summary>
+        /// メッセージ出力ヘルパー。
+        /// </summary>
         public static MessageHelper Message { get; private set; } = default!;
 
 #if DEBUG
+        /// <summary>
+        /// ファイル出力ヘルパー。
+        /// </summary>
+        /// <remarks>DEBUG 時のみ有効。</remarks>
         private static FileLogger FileLogger { get; set; } = default!;
 #endif
 
@@ -62,9 +69,6 @@ namespace Elin.Plugin.Main.PluginHelpers
         /// 共通的な処理。
         /// </summary>
         internal static CommonHelper Common { get; } = new CommonHelper();
-
-        /// <inheritdoc cref="MessageHelper.CanOutputMessage"/>
-        public static bool CanOutputMessage => MessageHelper.CanOutputMessage;
 
         #endregion
 
