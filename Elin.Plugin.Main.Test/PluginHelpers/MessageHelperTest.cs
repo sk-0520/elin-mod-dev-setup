@@ -82,9 +82,9 @@ namespace Elin.Plugin.Main.Test.PluginHelpers
         [Theory]
         [InlineData("1!", 1)]
         [InlineData("9!", 9)]
-        [InlineData("<" + MessageHelperTest_Header + "+" + nameof(ToLogData_Object_Nullable_Class) + ":null>", 0)]
-        [InlineData("<" + MessageHelperTest_Header + "+" + nameof(ToLogData_Object_Nullable_Class) + ":null>", 10)]
-        [InlineData("<" + MessageHelperTest_Header + "+" + nameof(ToLogData_Object_Nullable_Class) + ":null>", 20)]
+        [InlineData("<" + MessageHelperTest_Header + "+" + nameof(ToLogData_Object_Nullable_Class) + ">", 0)]
+        [InlineData("<" + MessageHelperTest_Header + "+" + nameof(ToLogData_Object_Nullable_Class) + ">", 10)]
+        [InlineData("<" + MessageHelperTest_Header + "+" + nameof(ToLogData_Object_Nullable_Class) + ">", 20)]
         public void ToLogData_Object_Nullable_Test(string expected, int input)
         {
             var test = new MessageHelper(SynchronizationContext.Current);

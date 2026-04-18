@@ -159,7 +159,7 @@ namespace Elin.Plugin.Main.PluginHelpers
             {
                 null => "<null>",
                 string str => str,
-                _ => data.ToString() ?? $"<{typeof(T).FullName}:null>"
+                _ => data.ToString() ?? $"<{data.GetType().FullName}>"
             };
         }
 
