@@ -215,8 +215,8 @@ namespace Elin.Plugin.Generator.Test
         [InlineData("&gt;", ">")]
         [InlineData("&quot;", "\"")]
         [InlineData("&apos;", "'")]
-        [InlineData("&lt;xml attr=&quot;1&quot; hreh=&apos;localhost?a=b&amp;c=d&apos; /&gt;", "<xml attr=\"1\" hreh='localhost?a=b&c=d' />")]
-        public void BuildTest(string expected, string input)
+        [InlineData("&lt;xml attr=&quot;1&quot; href=&apos;localhost?a=b&amp;c=d&apos; /&gt;", "<xml attr=\"1\" href='localhost?a=b&c=d' />")]
+        public void EscapeTest(string expected, string input)
         {
             var test = new XmlDocumentCommentBuilder(new SourceBuilder());
             var actual = test.Escape(input);
