@@ -272,7 +272,7 @@ Plugin.json のうち、リポジトリに残す価値があまりないもの�
 ```json
 {
     "general": {
-        "seiShouNagon": {
+        "SeiShouNagon": {
             "JP": "いとおかし",
             "EN": "How charming"
         }
@@ -298,10 +298,8 @@ class Class {
 
 Elin の言語設定を英語に変えて再度呼び出すと「How charming」が表示されます。
 
-Json 側のプロパティ名はキャメル形式ですが、C#側で使用する場合はパスカル形式になる点に注意してください。
-
 > [!NOTE]
-> いざやってみるとパスカル形式で定義できたほうが便利な気がしたので、将来的に緩和するかもしれません。
+> 元々キャメルケースだったんですが、コピペ出来んとかいろいろ小さなストレスが積み重なった結果、パスカルケースに落ち着きました。
 
 #### `$.format`
 
@@ -311,7 +309,7 @@ Json 側のプロパティ名はキャメル形式ですが、C#側で使用す�
 {
     ...(略)...
     "format": {
-        "departingInSeconds": {
+        "DepartingInSeconds": {
             "JP": "あと${SEC}秒で出発",
             "EN": "Departing in ${SEC} seconds",
             "parameters": {

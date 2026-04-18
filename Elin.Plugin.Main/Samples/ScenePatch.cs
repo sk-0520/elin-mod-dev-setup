@@ -20,7 +20,7 @@ namespace Elin.Plugin.Main.Samples
 
                 case Scene.Mode.StartGame:
                     ModHelper.LogDev(ModHelper.Lang.General.HelloWorld);
-                    ModHelper.LogDev(ModHelper.Lang.Formatter.FormatCalcFormat(a: 999, b: 1, c: 1000));
+                    ModHelper.LogDev(ModHelper.Lang.Formatter.FormatCalculation(a: 999, b: 1, c: 1000));
                     ModHelper.LogDev(ModHelper.ToStringFromInformation());
                     break;
 
