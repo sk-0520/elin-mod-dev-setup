@@ -1,19 +1,19 @@
 {
   "$schema": "./dev-items/localization.schema.json",
   "general": {
-    "helloWorld": {
+    "HelloWorld": {
       "JP": "こんにちは世界",
       "EN": "Hello World",
       "CN": "你好，世界"
     },
-    "modSampleLabel": {
+    "ModSampleLabel": {
       "JP": "[Mod例]",
       "EN": "[Mod Sample]",
       "CN": "[Mod示例]"
     }
   },
   "format": {
-    "calcFormat": {
+    "Calculation": {
       "JP": "${A} + ${B} = ${C}",
       "EN": "${A} + ${B} = ${C}",
       "CN": "${A} + ${B} = ${C}",
