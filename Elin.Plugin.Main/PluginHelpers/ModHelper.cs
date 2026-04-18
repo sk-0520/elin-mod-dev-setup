@@ -40,7 +40,7 @@ namespace Elin.Plugin.Main.PluginHelpers
         /// <see cref="BepInEx"/>の提供するロガー。
         /// </summary>
         public static ManualLogSource Logger { get; private set; } = default!;
-        private static SynchronizationContext Context { get; set; } = default!;
+        public static SynchronizationContext Context { get; set; } = default!;
         /// <summary>
         /// メッセージ出力ヘルパー。
         /// </summary>
