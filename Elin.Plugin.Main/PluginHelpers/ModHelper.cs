@@ -235,8 +235,13 @@ namespace Elin.Plugin.Main.PluginHelpers
                     using (Message.PreserveColor())
                     {
                         Msg.NewLine();
+
+                        // 本メソッドはユーザー向けではなく実装者向けのため、Package.Title ではなく Mod.Name を使用する
+                        // 膨大なログが表示されていても、それが Mod.Name となっていればリリース版には表示されないため、誤ってリリース版にログを混入させたかどうかの不安は減る
+                        // デバッグ版をリリースしたのであれば知らない。。。
                         Msg.SetColor(Color.cyan);
                         Msg.SayRaw($"<{Mod.Name}> ");
+
                         Msg.SetColor(color);
                         foreach (var line in lines)
                         {
@@ -388,16 +393,7 @@ namespace Elin.Plugin.Main.PluginHelpers
                 {
                     using (Message.PreserveColor())
                     {
-                        var color = logLevel switch
-                        {
-                            LogLevel.Debug => Color.gray,
-                            LogLevel.Info => Color.blue,
-                            LogLevel.Message => Color.white,
-                            LogLevel.Warning => Color.yellow,
-                            LogLevel.Error => Color.red,
-                            LogLevel.Fatal => new Color(0.5f, 0, 0),
-                            _ => Color.green,
-                        };
+                        var color = Message.GetLogLevelColor(logLevel);
 
                         Msg.SetColor(Color.cyan);
                         Msg.SayRaw($"<{Package.Title}> ");

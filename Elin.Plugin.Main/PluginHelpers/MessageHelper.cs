@@ -1,10 +1,14 @@
+using BepInEx.Logging;
 using System;
 using System.IO;
 using System.Threading;
 
 namespace Elin.Plugin.Main.PluginHelpers
 {
-    public class MessageColorScope : IDisposable
+    /// <summary>
+    /// 表に出ないので file スコープでヨシ。
+    /// </summary>
+    file class MessageColorScope : IDisposable
     {
         public MessageColorScope(Color previousColor)
         {
@@ -156,6 +160,20 @@ namespace Elin.Plugin.Main.PluginHelpers
                 null => "<null>",
                 string str => str,
                 _ => data.ToString() ?? $"<{typeof(T).FullName}:null>"
+            };
+        }
+
+        public Color GetLogLevelColor(LogLevel logLevel)
+        {
+            return logLevel switch
+            {
+                LogLevel.Debug => Color.gray,
+                LogLevel.Info => Color.blue,
+                LogLevel.Message => Color.white,
+                LogLevel.Warning => Color.yellow,
+                LogLevel.Error => Color.red,
+                LogLevel.Fatal => new Color(0.5f, 0, 0),
+                _ => Color.green,
             };
         }
 
