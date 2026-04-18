@@ -1,8 +1,9 @@
-﻿using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Text;
 
 namespace Elin.Plugin.Generator
 {
@@ -243,36 +244,33 @@ namespace Elin.Plugin.Generator
         #endregion
     }
 
-    [Obsolete("XML ドキュメントコメントの手書きの限界が来た時に実装する予定")]
-    public class XmlDocumentElement
-    {
-        public XmlDocumentElement(string elementName)
-        {
-            ElementName = elementName;
-        }
-
-        #region property
-
-        public string ElementName { get; }
-        public Dictionary<string, string> Attributes { get; } = new Dictionary<string, string>();
-
-        #endregion
-    }
-
     public class XmlDocumentCommentBuilder
     {
         public XmlDocumentCommentBuilder(SourceBuilder sourceBuilder)
         {
             SourceBuilder = sourceBuilder;
+            Element = new XmlElementGenerator(this);
         }
 
         #region property
 
         private SourceBuilder SourceBuilder { get; }
+        public XmlElementGenerator Element { get; }
 
         #endregion
 
         #region function
+
+        public virtual string Escape(string s)
+        {
+            return s
+                .Replace("&", "&amp;")
+                .Replace("<", "&lt;")
+                .Replace(">", "&gt;")
+                .Replace("\"", "&quot;")
+                .Replace("'", "&apos;")
+            ;
+        }
 
         public virtual string ToDocumentComment(string s)
         {
@@ -298,6 +296,259 @@ namespace Elin.Plugin.Generator
         {
             return ToDocumentComments(SourceBuilder.SplitLines(xml));
         }
+
+        #endregion
+    }
+
+    public interface IXmlDocumentNode
+    {
+        #region property
+
+        string NodeName { get; }
+
+        #endregion
+
+        #region function
+
+        string ToXmlString();
+
+        #endregion
+    }
+
+    public class XmlDocumentText : IXmlDocumentNode
+    {
+        public XmlDocumentText(string content, XmlDocumentCommentBuilder xmlBuilder)
+        {
+            Content = content;
+            XmlBuilder = xmlBuilder;
+        }
+
+        #region property
+
+        private XmlDocumentCommentBuilder XmlBuilder { get; }
+        public string Content { get; }
+
+        #endregion
+
+        #region IXmlDocumentNode
+
+        public string NodeName => "#text";
+
+        public string ToXmlString()
+        {
+            return XmlBuilder.Escape(Content);
+        }
+
+        #endregion
+    }
+
+    public class XmlDocumentComment : IXmlDocumentNode
+    {
+        public XmlDocumentComment(string comment)
+        {
+            Comment = comment;
+        }
+
+        #region property
+
+        public string Comment { get; }
+
+        #endregion
+
+        #region IXmlDocumentNode
+
+        public string NodeName => "#comment";
+
+        public string ToXmlString()
+        {
+            var comment = Comment;
+            if (comment.Contains("--"))
+            {
+                // XML コメント内で "--" は使用できないので、U+2013(EN DASH) に置換する
+                comment = comment.Replace("--", "––");
+            }
+
+            return "<!-- " + comment + " -->";
+        }
+
+        #endregion
+    }
+
+    public class XmlDocumentFragment : IXmlDocumentNode
+    {
+        public XmlDocumentFragment(IReadOnlyCollection<IXmlDocumentNode> children)
+        {
+            Children = children;
+        }
+
+        #region property
+
+        public IReadOnlyCollection<IXmlDocumentNode> Children { get; }
+
+        #endregion
+
+        #region IXmlDocumentNode
+
+        public string NodeName => "#fragment";
+
+        public string ToXmlString()
+        {
+            return string.Join(string.Empty, Children.Select(a => a.ToXmlString()));
+        }
+
+        #endregion
+    }
+
+    public class XmlDocumentCData : IXmlDocumentNode // MDN では Text が親だけど、やってらんねーってことで。
+    {
+        public XmlDocumentCData(string content)
+        {
+            Content = content;
+        }
+
+        #region property
+
+        public string Content { get; }
+
+        #endregion
+
+        #region IXmlDocumentNode
+
+        public string NodeName => "#cdata-section";
+
+        public string ToXmlString()
+        {
+            return "<![CDATA[" + Content + "]]>";
+        }
+
+        #endregion
+    }
+
+    public class XmlDocumentElement : IXmlDocumentNode
+    {
+        public XmlDocumentElement(string elementName, IReadOnlyCollection<IXmlDocumentNode> children, XmlDocumentCommentBuilder xmlBuilder)
+        {
+            ElementName = elementName;
+            Children = children;
+            XmlBuilder = xmlBuilder;
+        }
+
+        #region property
+
+        private XmlDocumentCommentBuilder XmlBuilder { get; }
+        public string ElementName { get; }
+        public IReadOnlyCollection<IXmlDocumentNode> Children { get; }
+        public Dictionary<string, string> Attributes { get; set;/* init 扱い*/ } = new Dictionary<string, string>();
+
+        #endregion
+
+        #region IXmlDocumentNode
+
+        public string NodeName => ElementName;
+
+        public string ToXmlString()
+        {
+            var result = new StringBuilder();
+
+            result.Append('<');
+            result.Append(ElementName);
+
+            if (0 < Attributes.Count)
+            {
+                // テストやらの都合で順序は保証しておく
+                foreach (var pair in Attributes.OrderBy(k => k.Key))
+                {
+                    result.Append(' ');
+                    result.Append(pair.Key);
+                    result.Append('=');
+                    result.Append('"');
+                    result.Append(XmlBuilder.Escape(pair.Value));
+                    result.Append('"');
+                }
+            }
+
+            if (0 < Children.Count)
+            {
+                result.Append('>');
+
+                foreach (var child in Children)
+                {
+                    result.Append(child.ToXmlString());
+                }
+
+                result.Append("</");
+                result.Append(ElementName);
+                result.Append('>');
+            }
+            else
+            {
+                result.Append(" />");
+            }
+
+            return result.ToString();
+        }
+
+        #endregion
+    }
+
+    public class XmlElementGenerator
+    {
+        public XmlElementGenerator(XmlDocumentCommentBuilder xmlBuilder)
+        {
+            XmlBuilder = xmlBuilder;
+        }
+
+        #region property
+
+        private XmlDocumentCommentBuilder XmlBuilder { get; }
+
+        #endregion
+
+        #region function
+
+        private IReadOnlyCollection<IXmlDocumentNode> GetCollection(IEnumerable<IXmlDocumentNode> nodes)
+        {
+            if (nodes is IReadOnlyCollection<IXmlDocumentNode> raw)
+            {
+                return raw;
+            }
+
+            return nodes.ToArray();
+        }
+
+        public XmlDocumentElement Summary(string content)
+        {
+            return new XmlDocumentElement("summary", [new XmlDocumentText(content, XmlBuilder)], XmlBuilder);
+        }
+
+        public XmlDocumentElement Param(string name, string content)
+        {
+            var element = new XmlDocumentElement("param", [new XmlDocumentText(content, XmlBuilder)], XmlBuilder);
+            element.Attributes["name"] = name;
+            return element;
+        }
+
+        public XmlDocumentElement Paragraph(string content)
+        {
+            var element = new XmlDocumentElement("para", [new XmlDocumentText(content, XmlBuilder)], XmlBuilder);
+            return element;
+        }
+
+        public XmlDocumentElement Remarks(IEnumerable<IXmlDocumentNode> nodes)
+        {
+            return new XmlDocumentElement("remarks", GetCollection(nodes), XmlBuilder);
+        }
+
+        public XmlDocumentElement Remarks(IEnumerable<string> content)
+        {
+            return Remarks(content.Select(a => Paragraph(a)));
+        }
+
+        public XmlDocumentElement Remarks(string content)
+        {
+            return Remarks([new XmlDocumentText(content, XmlBuilder)]);
+        }
+
 
         #endregion
     }
