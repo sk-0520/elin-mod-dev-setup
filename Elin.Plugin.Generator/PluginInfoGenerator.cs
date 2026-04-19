@@ -42,6 +42,7 @@ namespace Elin.Plugin.Generator
         }
 
         private static T? SafeParseDefine<T>(IncrementalGeneratorInitializationContext context, string rawJson)
+            where T : class
         {
             if (TryParseDefine<T>(context, rawJson, out var result))
             {
