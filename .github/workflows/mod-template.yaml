@@ -151,11 +151,18 @@ jobs:
               Where-Object { $_.Name -notmatch 'preview\..*' } |
               Sort-Object -Property FullName
           }
-          foreach($key in $items.Keys) {
-            Write-Host "Contents of $key"
-            foreach($item in $items[$key]) {
-              Write-Host $item.FullName
+          $w = $items['windows-latest']
+          $u = $items['ubuntu-latest']
+          $hasError = $false
+          for($i = 0; $i -lt $w.Count; $i++) {
+            $diff = Compare-Object -ReferenceObject $w[$i] -DifferenceObject $u[$i] -Property Name, Length, Hash
+            if($diff) {
+              $diff
+              $hasError = $true
             }
+          }
+          if($hasError) {
+            throw "差異あり"
           }
 
   debug-dll-error:
