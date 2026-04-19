@@ -35,6 +35,12 @@
 		<ReferencePrivate>True</ReferencePrivate>
 	</PropertyGroup>
 
+	<ItemGroup Condition="'$(MSBuildProjectName)' == 'Elin.Plugin.Generator.Test'">
+		<Reference Include="$(ElinPath)\BepInEx\core\BepInEx*.dll">
+			<Private>$(ReferencePrivate)</Private>
+		</Reference>
+	</ItemGroup>
+
 	<ItemGroup Condition="!$(MSBuildProjectName.Contains('.Generator'))">
 		<Reference Include="$(ElinPath)\BepInEx\core\BepInEx*.dll">
 			<Private>$(ReferencePrivate)</Private>
