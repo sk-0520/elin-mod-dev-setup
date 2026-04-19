@@ -276,7 +276,7 @@ namespace Elin.Plugin.Generator
             {
                 return $$"""
 
-                public required ConfigEntry<{{symbol.Type.ToDisplayString()}}> {{symbol.Name}} { get; init; }
+                public ConfigEntry<{{symbol.Type.ToDisplayString()}}> {{symbol.Name}} { get; set; } = default!;
                 
                 """;
             }
