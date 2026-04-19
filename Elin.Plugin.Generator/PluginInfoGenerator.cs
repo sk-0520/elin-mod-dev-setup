@@ -41,6 +41,15 @@ namespace Elin.Plugin.Generator
             return false;
         }
 
+        private static T? SafeParseDefine<T>(IncrementalGeneratorInitializationContext context, string rawJson)
+        {
+            if (TryParseDefine<T>(context, rawJson, out var result))
+            {
+                return result;
+            }
+
+            return null;
+        }
 
         #endregion
 
@@ -52,14 +61,7 @@ namespace Elin.Plugin.Generator
                 .Where(file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoFileName)
                 .Select((file, _) => (file: file, json: file.GetText()?.ToString()))
                 .Where(a => a.json != null)
-                .Select((a, _) =>
-                {
-                    if (TryParseDefine<PluginDefine>(context, a.json!, out var result))
-                    {
-                        return result;
-                    }
-                    return null;
-                })
+                .Select((a, _) => SafeParseDefine<PluginDefine>(context, a.json!))
                 .Where(a => a is not null)
                 .Collect()
                 .Select((arr, _) => arr.FirstOrDefault())
@@ -69,14 +71,7 @@ namespace Elin.Plugin.Generator
                 .Where(file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoDevFileName)
                 .Select((file, _) => (file: file, json: file.GetText()?.ToString()))
                 .Where(a => a.json != null)
-                .Select((a, _) =>
-                {
-                    if (TryParseDefine<PluginDevDefine>(context, a.json!, out var result))
-                    {
-                        return result;
-                    }
-                    return null;
-                })
+                .Select((a, _) => SafeParseDefine<PluginDevDefine>(context, a.json!))
                 .Where(a => a is not null)
                 .Collect()
                 .Select((arr, _) => arr.FirstOrDefault())
