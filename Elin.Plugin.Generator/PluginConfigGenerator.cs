@@ -501,11 +501,14 @@ namespace Elin.Plugin.Generator
 
             var source = $$"""
             {{sourceBuilder.Header}}
+            #nullable enable
+            
             {{sourceBuilder.ToNamespaceCode(targetSymbol)}}
 
             using BepInEx.Configuration;
 
-            [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1515:パブリック型を内部にすることを検討してください", Justification = "いやべつに。。。")]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1852: 型'{{targetSymbol.Name}}' に含まれるアセンブリにはサブタイプがなく、外部から参照できないため、シールできます", Justification = "クラスを生やすので無視無視")]
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1515: パブリック型を内部にすることを検討してください", Justification = "いやべつに。。。")]
             partial class {{targetSymbol.Name}}
             {
                 {{sourceBuilder.JoinLines(bindSources)}}
