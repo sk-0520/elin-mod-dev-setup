@@ -83,6 +83,14 @@ jobs:
           # 画像変換処理は PowerShell(というか .NET Framework) でごにょごにょしてるので、非 Windows 環境ではとりあえず画像を消す
           rm Elin.Plugin.Main/@Assets/preview.png
 
+      - name: Setup Deterministic
+        shell: pwsh
+        run: |
+          # 改行がしんどいことになるのでなくす
+          $json = Get-Content -Raw -Path "Plugin.json" | ConvertFrom-Json
+          $json.package.description = @("DESCRIPTION")
+          ConvertTo-Json -InputObject $json | Set-Content -Path "Plugin.json" -Encoding UTF8
+
       - name: Setup CI Module
         shell: pwsh
         run: |
