@@ -150,7 +150,7 @@ jobs:
             $items[$dir.Name] = Get-ChildItem -Path $dir.FullName -Recurse
           }
           foreach($key in $items.Keys) {
-            Write-Host "Contents of $key:"
+            Write-Host "Contents of $key"
             foreach($item in $items[$key]) {
               Write-Host $item.FullName
             }
