@@ -505,6 +505,7 @@ namespace Elin.Plugin.Generator
 
             using BepInEx.Configuration;
 
+            [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1515:パブリック型を内部にすることを検討してください", Justification = "いやべつに。。。")]
             partial class {{targetSymbol.Name}}
             {
                 {{sourceBuilder.JoinLines(bindSources)}}
