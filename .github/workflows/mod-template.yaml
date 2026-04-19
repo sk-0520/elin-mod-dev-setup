@@ -76,6 +76,13 @@ jobs:
             repository: sk-0520/elin-mod-ci-infrastructure
             path: elin-mod-ci-infrastructure
 
+      - name: Setup Non Windows CI Module
+        if: ${{ !contains(matrix.os-image, 'windows') }}
+        shell: bash
+        run: |
+          # 画像変換処理は PowerShell(というか .NET Framework) でごにょごにょしてるので、非 Windows 環境ではとりあえず画像を消す
+          rm Elin.Plugin.Main/@Assets/preview.png
+
       - name: Setup CI Module
         shell: pwsh
         run: |
