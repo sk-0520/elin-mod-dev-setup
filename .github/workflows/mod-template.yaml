@@ -141,32 +141,10 @@ jobs:
           path: artifacts
           pattern: build-*
 
-      - name: Check artifacts
-        shell: pwsh
+      - name: Check Artifacts
+        shell: bash
         run: |
-          $dirs = ChildItem -Path artifacts\build-* -Directory
-          $items = @{}
-          foreach($dir in $dirs) {
-            $items[$dir.Name] = Get-ChildItem -Path $dir.FullName -Recurse -File |
-              Where-Object { $_.Name -notmatch 'preview\..*' } |
-              Sort-Object -Property FullName
-          }
-          $w = $items['build-windows-latest']
-          $u = $items['build-ubuntu-latest']
-          $hasError = $false
-          for($i = 0; $i -lt $w.Count; $i++) {
-            $diff = Compare-Object `
-              -ReferenceObject (Get-Content $w[$i].FullName) `
-              -DifferenceObject (Get-Content $u[$i].FullName)
-            if($diff) {
-              Write-Host "$w[$i] != $u[$i]"
-              Write-Host $diff
-              $hasError = $true
-            }
-          }
-          if($hasError) {
-            throw "差異あり"
-          }
+          diff --exclude='preview.*' --brief --recursive artifacts/build-windows-latest artifacts/build-ubuntu-latest
 
   debug-dll-error:
     name: "Debug DLL Error"
