@@ -145,7 +145,7 @@ jobs:
         shell: pwsh
         run: |
           $dirs = ChildItem -Path artifacts\build-* -Directory
-          $items = {}
+          $items = @{}
           foreach($dir in $dirs) {
             $items[$dir.Name] = Get-ChildItem -Path $dir.FullName -Recurse
           }
