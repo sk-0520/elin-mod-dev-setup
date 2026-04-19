@@ -54,7 +54,8 @@ jobs:
           if(!(Test-Path -Path "Elin.Plugin.slnx")) {
             throw "ソリューションファイルがない(到達不可)"
           }
-          dev-items\initialize.ps1 -ModName "Initialize"
+          $initializePath = Join-Path -Path "dev-items" -ChildPath "initialize.ps1"
+          & $initializePath -ModName "Initialize"
           if(Test-Path -Path "Elin.Plugin.slnx") {
             throw "既存ソリューションファイルが残っている"
           }
