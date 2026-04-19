@@ -13,12 +13,6 @@ namespace Elin.Plugin.Generator
     [Generator(LanguageNames.CSharp)]
     internal class PluginConfigGenerator : IIncrementalGenerator
     {
-        #region property
-
-        private HashSet<string> GeneratedClassNames { get; } = new HashSet<string>();
-
-        #endregion
-
         #region function
 
         private bool IsConfigTarget(ISymbol symbol)
@@ -409,12 +403,6 @@ namespace Elin.Plugin.Generator
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            if (GeneratedClassNames.Contains(targetSymbol.ToDisplayString()))
-            {
-                yield break;
-            }
-            GeneratedClassNames.Add(targetSymbol.ToDisplayString());
-
             var properties = GetProperties(targetSymbol).ToArray();
             var nestedProperties = GetNestedProperties(properties);
 
@@ -548,6 +536,8 @@ namespace Elin.Plugin.Generator
 
         private void GenerateSource(SourceProductionContext context, ImmutableArray<GeneratorAttributeSyntaxContext> array)
         {
+            var generatedClassNames = new HashSet<string>();
+
             var sourceBuilder = new SourceBuilder();
             foreach (var attribute in array)
             {
@@ -555,6 +545,13 @@ namespace Elin.Plugin.Generator
 
                 var compilation = attribute.SemanticModel.Compilation;
                 var targetSymbol = (INamedTypeSymbol)attribute.TargetSymbol;
+
+                // 既にこの実行で生成済みならスキップ（インスタンスフィールドではなくローカルを使用）
+                if (generatedClassNames.Contains(targetSymbol.ToDisplayString()))
+                {
+                    continue;
+                }
+                generatedClassNames.Add(targetSymbol.ToDisplayString());
 
                 // ネストは無理
                 if (targetSymbol.ContainingType != null)
