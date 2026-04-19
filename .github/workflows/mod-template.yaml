@@ -111,6 +111,7 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
+          dotnet --version
           dotnet build --configuration ${{ matrix.configuration }}
 
       - name: Artifact [build]
