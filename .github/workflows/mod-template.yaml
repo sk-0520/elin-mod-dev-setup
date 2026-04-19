@@ -159,7 +159,8 @@ jobs:
               -ReferenceObject (Get-Content $w[$i].FullName) `
               -DifferenceObject (Get-Content $u[$i].FullName)
             if($diff) {
-              $diff
+              Host-Write "$w[$i] != $u[$i]"
+              Host-Write $diff
               $hasError = $true
             }
           }
