@@ -32,13 +32,16 @@ jobs:
     needs:
       - assembly-name
 
-    runs-on: *mod-os-image
-
     strategy:
       matrix:
         configuration: &matrix-configurations
           - Debug
           - Release
+        os-image:
+          - windows-latest
+          - ubuntu-latest
+
+    runs-on: ${{ matrix.os-image }}
 
     steps:
       - name: Checkout
@@ -63,7 +66,7 @@ jobs:
         if: matrix.configuration == 'Release'
         uses: actions/upload-artifact@v7
         with:
-          name: initialize
+          name: initialize-${{ matrix.os-image }}
           path: .
 
       - name: Checkout CI Module
@@ -106,10 +109,11 @@ jobs:
         if: matrix.configuration == 'Release'
         uses: actions/upload-artifact@v7
         with:
-          name: build
+          name: build-${{ matrix.os-image }}
           path: output
 
       - name: Test
+        if: ${{ contains(matrix.os-image, 'windows') }}
         shell: pwsh
         run: |
           dotnet test --configuration ${{ matrix.configuration }}
