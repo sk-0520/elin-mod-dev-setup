@@ -1,5 +1,15 @@
 # elin-mod-dev-setup
 
+[![Build CI/CD](https://github.com/sk-0520/elin-mod-dev-setup/actions/workflows/build.yaml/badge.svg?branch=master)](https://github.com/sk-0520/elin-mod-dev-setup/actions/workflows/build.yaml)
+[![Build CI/CD](https://github.com/sk-0520/elin-mod-dev-setup/actions/workflows/mod-template.yaml/badge.svg?branch=master)](https://github.com/sk-0520/elin-mod-dev-setup/actions/workflows/mod-template.yaml)
+![GitHub code size in bytes](https://img.shields.io/github/languages/code-size/sk-0520/elin-mod-dev-setup)
+
+[![Quality Gate Status](https://sonarcloud.io/api/project_badges/measure?project=sk-0520_elin-mod-dev-setup&metric=alert_status)
+![Bugs](https://sonarcloud.io/api/project_badges/measure?project=sk-0520_elin-mod-dev-setup&metric=bugs)
+![Code Smells](https://sonarcloud.io/api/project_badges/measure?project=sk-0520_elin-mod-dev-setup&metric=code_smells)
+![Duplicated Lines (%)](https://sonarcloud.io/api/project_badges/measure?project=sk-0520_elin-mod-dev-setup&metric=duplicated_lines_density)](https://sonarcloud.io/summary/new_code?id=sk-0520_elin-mod-dev-setup)
+[![CodeFactor](https://www.codefactor.io/repository/github/sk-0520/elin-mod-dev-setup/badge)](https://www.codefactor.io/repository/github/sk-0520/elin-mod-dev-setup)
+
 ## はじめに
 
 本リポジトリは [Elin](https://store.steampowered.com/app/2135150/Elin) の Mod を作成するためのテンプレートとなります。
