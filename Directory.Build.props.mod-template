@@ -5,6 +5,7 @@
 		<WarningLevel>9999</WarningLevel>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<Nullable>enable</Nullable>
+		<Deterministic>True</Deterministic>
 
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<InvariantGlobalization>true</InvariantGlobalization>
