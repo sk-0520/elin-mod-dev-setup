@@ -126,6 +126,29 @@ jobs:
         run: |
           dotnet test --configuration ${{ matrix.configuration }}
 
+  artifacts:
+    name: Verify Artifacts
+
+    needs:
+      - initialize
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v7
+        with:
+          path: artifacts
+          pattern: build-*
+
+      - name: Check artifacts
+        shell: pwsh
+        run: |
+          ChildItem -Path artifacts\build-* -Directory | ForEach-Object {
+            Write-Host "Artifact: $($_.FullName)"
+            Get-ChildItem -Path $_.FullName -Recurse
+          }
+
   debug-dll-error:
     name: "Debug DLL Error"
 
