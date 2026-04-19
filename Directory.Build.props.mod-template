@@ -5,6 +5,7 @@
 		<WarningLevel>9999</WarningLevel>
 		<TreatWarningsAsErrors>true</TreatWarningsAsErrors>
 		<Nullable>enable</Nullable>
+		<Deterministic>True</Deterministic>
 
 		<EnableNETAnalyzers>true</EnableNETAnalyzers>
 		<InvariantGlobalization>true</InvariantGlobalization>
@@ -26,6 +27,10 @@
 		<Optimize>true</Optimize>
 		<DebugType>none</DebugType>
 		<PathMap>$(SolutionDir)=.</PathMap>
+	</PropertyGroup>
+
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
 	</PropertyGroup>
 
 	<PropertyGroup>

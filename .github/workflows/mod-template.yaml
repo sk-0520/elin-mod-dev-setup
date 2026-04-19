@@ -5,9 +5,25 @@ on:
   workflow_dispatch:
 
 jobs:
+  preprocess:
+    name: Preprocess
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Repository
+        if: ${{ github.repository != 'sk-0520/elin-mod-dev-setup' }}
+        shell: bash
+        run: |
+          echo "this workflow is only for the `sk-0520/elin-mod-dev-setup` repository."
+          exit 1
+
 
   assembly-name:
     name: Assembly Name
+
+    needs:
+      - preprocess
 
     runs-on: &mod-os-image windows-latest
 
@@ -32,13 +48,17 @@ jobs:
     needs:
       - assembly-name
 
-    runs-on: *mod-os-image
-
     strategy:
       matrix:
         configuration: &matrix-configurations
           - Debug
           - Release
+        os-image:
+          - windows-latest
+          - ubuntu-latest
+          - macos-latest
+
+    runs-on: ${{ matrix.os-image }}
 
     steps:
       - name: Checkout
@@ -51,7 +71,8 @@ jobs:
           if(!(Test-Path -Path "Elin.Plugin.slnx")) {
             throw "ソリューションファイルがない(到達不可)"
           }
-          dev-items\initialize.ps1 -ModName "Initialize"
+          $initializePath = Join-Path -Path "dev-items" -ChildPath "initialize.ps1"
+          & $initializePath -ModName "Initialize"
           if(Test-Path -Path "Elin.Plugin.slnx") {
             throw "既存ソリューションファイルが残っている"
           }
@@ -63,7 +84,7 @@ jobs:
         if: matrix.configuration == 'Release'
         uses: actions/upload-artifact@v7
         with:
-          name: initialize
+          name: initialize-${{ matrix.os-image }}
           path: .
 
       - name: Checkout CI Module
@@ -71,6 +92,21 @@ jobs:
         with: &checkout-ci-module
             repository: sk-0520/elin-mod-ci-infrastructure
             path: elin-mod-ci-infrastructure
+
+      - name: Setup Non Windows CI Module
+        if: ${{ !contains(matrix.os-image, 'windows') }}
+        shell: bash
+        run: |
+          # 画像変換処理は PowerShell(というか .NET Framework) でごにょごにょしてるので、非 Windows 環境ではとりあえず画像を消す
+          rm Elin.Plugin.Main/@Assets/preview.png
+
+      - name: Setup Deterministic
+        shell: pwsh
+        run: |
+          # 改行がしんどいことになるのでなくす
+          $json = Get-Content -Raw -Path "Plugin.json" | ConvertFrom-Json
+          $json.package.description = @("DESCRIPTION")
+          ConvertTo-Json -InputObject $json | Set-Content -Path "Plugin.json" -Encoding UTF8
 
       - name: Setup CI Module
         shell: pwsh
@@ -100,22 +136,48 @@ jobs:
       - name: Build
         shell: pwsh
         run: |
+          dotnet --version
           dotnet build --configuration ${{ matrix.configuration }}
 
       - name: Artifact [build]
         if: matrix.configuration == 'Release'
         uses: actions/upload-artifact@v7
         with:
-          name: build
+          name: build-${{ matrix.os-image }}
           path: output
 
       - name: Test
+        if: ${{ contains(matrix.os-image, 'windows') }}
         shell: pwsh
         run: |
           dotnet test --configuration ${{ matrix.configuration }}
 
+  artifacts:
+    name: Verify Artifacts
+
+    needs:
+      - initialize
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Download Artifact
+        uses: actions/download-artifact@v7
+        with:
+          path: artifacts
+          pattern: build-*
+
+      - name: Check Artifacts
+        shell: bash
+        run: |
+          diff --exclude='preview.*' --brief --recursive --strip-trailing-cr artifacts/build-windows-latest artifacts/build-ubuntu-latest
+          diff --exclude='preview.*' --brief --recursive --strip-trailing-cr artifacts/build-windows-latest artifacts/build-macos-latest
+
   debug-dll-error:
     name: "Debug DLL Error"
+
+    needs:
+      - preprocess
 
     runs-on: *mod-os-image
 
