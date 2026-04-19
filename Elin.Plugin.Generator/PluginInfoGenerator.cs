@@ -11,12 +11,36 @@ namespace Elin.Plugin.Generator
     {
         #region property
 
-        private JsonSerializerOptions JsonSerializerOptions = new System.Text.Json.JsonSerializerOptions()
+        private static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions()
         {
             PropertyNameCaseInsensitive = true,
             AllowTrailingCommas = true,
-            ReadCommentHandling = System.Text.Json.JsonCommentHandling.Skip,
+            ReadCommentHandling = JsonCommentHandling.Skip,
         };
+
+        #endregion
+
+        #region function
+
+        private static bool TryParseDefine<T>(IncrementalGeneratorInitializationContext context, string rawJson, out T result)
+        {
+            try
+            {
+                var obj = JsonSerializer.Deserialize<T>(rawJson, JsonSerializerOptions);
+                if (obj is not null)
+                {
+                    result = obj;
+                    return true;
+                }
+            }
+            catch
+            {
+                //TODO: エラー表示
+            }
+            result = default!;
+            return false;
+        }
+
 
         #endregion
 
@@ -28,7 +52,15 @@ namespace Elin.Plugin.Generator
                 .Where(file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoFileName)
                 .Select((file, _) => (file: file, json: file.GetText()?.ToString()))
                 .Where(a => a.json != null)
-                .Select((a, _) => JsonSerializer.Deserialize<PluginDefine>(a.json!, JsonSerializerOptions))
+                .Select((a, _) =>
+                {
+                    if (TryParseDefine<PluginDefine>(context, a.json!, out var result))
+                    {
+                        return result;
+                    }
+                    return null;
+                })
+                .Where(a => a is not null)
                 .Collect()
                 .Select((arr, _) => arr.FirstOrDefault())
             ;
@@ -37,7 +69,15 @@ namespace Elin.Plugin.Generator
                 .Where(file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoDevFileName)
                 .Select((file, _) => (file: file, json: file.GetText()?.ToString()))
                 .Where(a => a.json != null)
-                .Select((a, _) => JsonSerializer.Deserialize<PluginDevDefine>(a.json!, JsonSerializerOptions))
+                .Select((a, _) =>
+                {
+                    if (TryParseDefine<PluginDevDefine>(context, a.json!, out var result))
+                    {
+                        return result;
+                    }
+                    return null;
+                })
+                .Where(a => a is not null)
                 .Collect()
                 .Select((arr, _) => arr.FirstOrDefault())
             ;
