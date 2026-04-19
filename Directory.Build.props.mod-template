@@ -29,6 +29,10 @@
 		<PathMap>$(SolutionDir)=.</PathMap>
 	</PropertyGroup>
 
+	<PropertyGroup Condition="'$(GITHUB_ACTIONS)' == 'true'">
+		<ContinuousIntegrationBuild>true</ContinuousIntegrationBuild>
+	</PropertyGroup>
+
 	<PropertyGroup>
 		<ReferencePrivate>False</ReferencePrivate>
 	</PropertyGroup>
