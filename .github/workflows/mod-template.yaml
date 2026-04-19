@@ -5,9 +5,25 @@ on:
   workflow_dispatch:
 
 jobs:
+  preprocess:
+    name: Preprocess
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Check Repository
+        if: ${{ github.repository != 'sk-0520/elin-mod-dev-setup' }}
+        shell: bash
+        run: |
+          echo "this workflow is only for the `sk-0520/elin-mod-dev-setup` repository."
+          exit 1
+
 
   assembly-name:
     name: Assembly Name
+
+    needs:
+      - preprocess
 
     runs-on: &mod-os-image windows-latest
 
@@ -157,6 +173,9 @@ jobs:
 
   debug-dll-error:
     name: "Debug DLL Error"
+
+    needs:
+      - preprocess
 
     runs-on: *mod-os-image
 
