@@ -148,7 +148,7 @@ jobs:
           $items = @{}
           foreach($dir in $dirs) {
             $items[$dir.Name] = Get-ChildItem -Path $dir.FullName -Recurse -File |
-              Where-Object { -not $_.Name -match 'preview.*' } |
+              Where-Object { $_.Name -notmatch 'preview\..*' } |
               Sort-Object -Property FullName
           }
           foreach($key in $items.Keys) {
