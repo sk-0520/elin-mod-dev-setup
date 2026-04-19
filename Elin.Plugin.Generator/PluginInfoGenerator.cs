@@ -35,7 +35,7 @@ namespace Elin.Plugin.Generator
             }
             catch
             {
-                //TODO: エラー表示
+                // EPG012 を出力したい、わからん！
             }
             result = default!;
             return false;
