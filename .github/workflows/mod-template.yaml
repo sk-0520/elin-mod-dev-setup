@@ -151,8 +151,8 @@ jobs:
               Where-Object { $_.Name -notmatch 'preview\..*' } |
               Sort-Object -Property FullName
           }
-          $w = $items['windows-latest']
-          $u = $items['ubuntu-latest']
+          $w = $items['build-windows-latest']
+          $u = $items['build-ubuntu-latest']
           $hasError = $false
           for($i = 0; $i -lt $w.Count; $i++) {
             $diff = Compare-Object `
