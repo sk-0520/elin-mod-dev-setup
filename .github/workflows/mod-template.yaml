@@ -144,9 +144,16 @@ jobs:
       - name: Check artifacts
         shell: pwsh
         run: |
-          ChildItem -Path artifacts\build-* -Directory | ForEach-Object {
-            Write-Host "Artifact: $($_.FullName)"
-            Get-ChildItem -Path $_.FullName -Recurse
+          $dirs = ChildItem -Path artifacts\build-* -Directory
+          $items = {}
+          foreach($dir in $dirs) {
+            $items[$dir.Name] = Get-ChildItem -Path $dir.FullName -Recurse
+          }
+          foreach($key in $items.Keys) {
+            Write-Host "Contents of $key:"
+            foreach($item in $items[$key]) {
+              Write-Host $item.FullName
+            }
           }
 
   debug-dll-error:
