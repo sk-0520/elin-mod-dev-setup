@@ -170,7 +170,8 @@ jobs:
       - name: Check Artifacts
         shell: bash
         run: |
-          diff3 --exclude='preview.*' --brief --recursive --strip-trailing-cr artifacts/build-windows-latest artifacts/build-ubuntu-latest artifacts/build-macos-latest
+          diff --exclude='preview.*' --brief --recursive --strip-trailing-cr artifacts/build-windows-latest artifacts/build-ubuntu-latest
+          diff --exclude='preview.*' --brief --recursive --strip-trailing-cr artifacts/build-windows-latest artifacts/build-macos-latest
 
   debug-dll-error:
     name: "Debug DLL Error"
