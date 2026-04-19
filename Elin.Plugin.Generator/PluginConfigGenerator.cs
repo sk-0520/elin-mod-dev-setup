@@ -311,6 +311,8 @@ namespace Elin.Plugin.Generator
         {
             foreach (var property in properties)
             {
+                context.CancellationToken.ThrowIfCancellationRequested();
+
                 if (property.IsVirtual)
                 {
                     if (property.Type.TypeKind == TypeKind.Class && property.Type.SpecialType != SpecialType.System_String)
@@ -404,6 +406,8 @@ namespace Elin.Plugin.Generator
 
         private IEnumerable<(string source, string fileName)> GenerateConfigSources(SourceProductionContext context, SourceBuilder sourceBuilder, INamedTypeSymbol targetSymbol, bool overrideReset)
         {
+            context.CancellationToken.ThrowIfCancellationRequested();
+
             if (GeneratedClassNames.Contains(targetSymbol.ToDisplayString()))
             {
                 yield break;
@@ -415,6 +419,8 @@ namespace Elin.Plugin.Generator
 
             foreach (var nestedProperty in nestedProperties)
             {
+                context.CancellationToken.ThrowIfCancellationRequested();
+
                 foreach (var configSource in GenerateConfigSources(context, sourceBuilder, (INamedTypeSymbol)nestedProperty.Type, false))
                 {
                     yield return configSource;
@@ -536,6 +542,8 @@ namespace Elin.Plugin.Generator
             var sourceBuilder = new SourceBuilder();
             foreach (var attribute in array)
             {
+                context.CancellationToken.ThrowIfCancellationRequested();
+
                 var compilation = attribute.SemanticModel.Compilation;
                 var targetSymbol = (INamedTypeSymbol)attribute.TargetSymbol;
 
