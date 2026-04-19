@@ -148,13 +148,16 @@ jobs:
           $items = @{}
           foreach($dir in $dirs) {
             $items[$dir.Name] = Get-ChildItem -Path $dir.FullName -Recurse -File |
+              Where-Object { $_.Name -notmatch 'preview\..*' } |
               Sort-Object -Property FullName
           }
           $w = $items['windows-latest']
           $u = $items['ubuntu-latest']
           $hasError = $false
           for($i = 0; $i -lt $w.Count; $i++) {
-            $diff = Compare-Object -ReferenceObject $w[$i] -DifferenceObject $u[$i] -Property Name, Length, Hash
+            $diff = Compare-Object `
+              -ReferenceObject (Get-Content $w[$i].FullName) `
+              -DifferenceObject (Get-Content $u[$i].FullName)
             if($diff) {
               $diff
               $hasError = $true
