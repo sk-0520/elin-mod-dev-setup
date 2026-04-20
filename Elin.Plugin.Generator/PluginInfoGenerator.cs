@@ -1,84 +1,19 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 
 namespace Elin.Plugin.Generator
 {
     [Generator(LanguageNames.CSharp)]
     internal class PluginInfoGenerator : IIncrementalGenerator
     {
-        #region property
-
-        private static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions()
-        {
-            PropertyNameCaseInsensitive = true,
-            AllowTrailingCommas = true,
-            ReadCommentHandling = JsonCommentHandling.Skip,
-        };
-
-        #endregion
-
         #region function
 
-        private static bool TryParseDefine<T>(IncrementalGeneratorInitializationContext context, string rawJson, out T result)
+        private static IncrementalValueProvider<PluginMacro> CollectMacro(IncrementalValueProvider<AnalyzerConfigOptionsProvider> analyzerConfigOptionsProvider)
         {
-            try
-            {
-                var obj = JsonSerializer.Deserialize<T>(rawJson, JsonSerializerOptions);
-                if (obj is not null)
-                {
-                    result = obj;
-                    return true;
-                }
-            }
-            catch
-            {
-                // EPG012 を出力したい、わからん！
-            }
-            result = default!;
-            return false;
-        }
-
-        private static T? SafeParseDefine<T>(IncrementalGeneratorInitializationContext context, string rawJson)
-            where T : class
-        {
-            if (TryParseDefine<T>(context, rawJson, out var result))
-            {
-                return result;
-            }
-
-            return null;
-        }
-
-        #endregion
-
-        #region IIncrementalGenerator
-
-        public void Initialize(IncrementalGeneratorInitializationContext context)
-        {
-            var define = context.AdditionalTextsProvider
-                .Where(file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoFileName)
-                .Select((file, _) => (file: file, json: file.GetText()?.ToString()))
-                .Where(a => a.json != null)
-                .Select((a, _) => SafeParseDefine<PluginDefine>(context, a.json!))
-                .Where(a => a is not null)
-                .Collect()
-                .Select((arr, _) => arr.FirstOrDefault())
-            ;
-
-            var devDefine = context.AdditionalTextsProvider
-                .Where(file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoDevFileName)
-                .Select((file, _) => (file: file, json: file.GetText()?.ToString()))
-                .Where(a => a.json != null)
-                .Select((a, _) => SafeParseDefine<PluginDevDefine>(context, a.json!))
-                .Where(a => a is not null)
-                .Collect()
-                .Select((arr, _) => arr.FirstOrDefault())
-            ;
-
-            var macroProvider = context.AnalyzerConfigOptionsProvider
+            return analyzerConfigOptionsProvider
                 .Select((configOptions, token) =>
                 {
                     var macro = new PluginMacro();
@@ -96,6 +31,25 @@ namespace Elin.Plugin.Generator
                     return macro;
                 })
             ;
+        }
+
+        #endregion
+
+        #region IIncrementalGenerator
+
+        public void Initialize(IncrementalGeneratorInitializationContext context)
+        {
+            var define = SourceGeneratorHelper.CollectJsonClass<PluginDefine>(
+                context.AdditionalTextsProvider,
+                file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoFileName
+            );
+
+            var devDefine = SourceGeneratorHelper.CollectJsonClass<PluginDevDefine>(
+                context.AdditionalTextsProvider,
+                file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoDevFileName
+            );
+
+            var macroProvider = CollectMacro(context.AnalyzerConfigOptionsProvider);
 
             context.RegisterSourceOutput(define.Combine(devDefine).Combine(macroProvider), (c, x) =>
             {
