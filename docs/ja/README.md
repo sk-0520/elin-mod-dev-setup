@@ -65,7 +65,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 
 ### Steam/Elin のパス確認
 
-`Directory.Build.targets.mod-template` にてそれぞれのパスが定義されています。
+`dev-items/Directory.Build.targets.mod-template` にてそれぞれのパスが定義されています。
 
 ```xml
 <PropertyGroup>
@@ -76,7 +76,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 ```
 
 ユーザー環境によっては変更する必要があります。  
-その場合は、 `Directory.Build.targets` に変更すべき設定を定義してください。
+その場合は、 `Directory.Build.targets(.dev.xml)` に変更すべき設定を定義してください。
 
 ```xml
 <PropertyGroup>
@@ -137,13 +137,9 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
   * スペルチェック用定義ファイル
   * なんですが、このファイルを編集することはありません
 * ⚠️ Directory.Build.props
-  * プロジェクト読み込み前の設定一覧(Mod 設定)
-* ⚠️ Directory.Build.props.mod-template
-  * Directory.Build.props に対するテンプレート設定です
+  * プロジェクト読み込み前の設定一覧
 * ⚠️ Directory.Build.targets
-  * プロジェクト読み込み後の設定一覧(Mod 設定)
-* ⚠️ Directory.Build.targets.mod-template
-  * Directory.Build.targets に対するテンプレート設定です
+  * プロジェクト読み込み後の設定一覧
 * ⚠️ Directory.Packages.props
   * NuGet!
   * <https://learn.microsoft.com/nuget/consume-packages/central-package-management>
@@ -171,6 +167,8 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 
 * Directory.Build.props.dev.xml
 * Directory.Build.targets.dev.xml
+
+これは git 管理外になるため、永続させるものは Directory.Build.props, Directory.Build.targets に設定してください。
 
 > [!NOTE]
 > Directory.Build.props と Directory.Build.targets で一生迷走してんな。
