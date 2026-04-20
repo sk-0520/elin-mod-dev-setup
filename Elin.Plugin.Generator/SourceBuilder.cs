@@ -300,7 +300,7 @@ namespace Elin.Plugin.Generator
         public string Build(Func<XmlNodeGenerator, IXmlDocumentNode> generator, bool applyDocumentComment)
         {
             var node = generator(NodeGenerator);
-            var xml = node.ToXmlString();
+            var xml = node.ToXmlString(XmlIndentContext.None);
             if (applyDocumentComment)
             {
                 return SourceBuilder.JoinLines(ToDocumentComments(xml));
@@ -341,7 +341,6 @@ namespace Elin.Plugin.Generator
 
         #region function
 
-        string ToXmlString();
         string ToXmlString(XmlIndentContext indentContext);
 
         #endregion
@@ -365,11 +364,6 @@ namespace Elin.Plugin.Generator
         #region IXmlDocumentNode
 
         public string NodeName => "#text";
-
-        public string ToXmlString()
-        {
-            return ToXmlString(XmlIndentContext.None);
-        }
 
         public string ToXmlString(XmlIndentContext indentContext)
         {
@@ -395,11 +389,6 @@ namespace Elin.Plugin.Generator
         #region IXmlDocumentNode
 
         public string NodeName => "#comment";
-
-        public string ToXmlString()
-        {
-            return ToXmlString(XmlIndentContext.None);
-        }
 
         public string ToXmlString(XmlIndentContext indentContext)
         {
@@ -433,11 +422,6 @@ namespace Elin.Plugin.Generator
 
         public string NodeName => "#fragment";
 
-        public string ToXmlString()
-        {
-            return ToXmlString(XmlIndentContext.None);
-        }
-
         public string ToXmlString(XmlIndentContext indentContext)
         {
             return string.Join(string.Empty, Children.Select(a => a.ToXmlString(indentContext)));
@@ -462,11 +446,6 @@ namespace Elin.Plugin.Generator
         #region IXmlDocumentNode
 
         public string NodeName => "#cdata-section";
-
-        public string ToXmlString()
-        {
-            return ToXmlString(XmlIndentContext.None);
-        }
 
         public string ToXmlString(XmlIndentContext indentContext)
         {
@@ -498,14 +477,9 @@ namespace Elin.Plugin.Generator
 
         public string NodeName => ElementName;
 
-        public string ToXmlString()
-        {
-            return ToXmlString(XmlIndentContext.None);
-        }
-
         public string ToXmlString(XmlIndentContext indentContext)
         {
-            var result = new StringBuilder();
+            var result = new StringBuilder(ElementName.Length + (Attributes.Count * 16) + (Children.Count * 32) + 4);
 
             result.Append('<');
             result.Append(ElementName);
@@ -530,7 +504,7 @@ namespace Elin.Plugin.Generator
 
                 foreach (var child in Children)
                 {
-                    result.Append(child.ToXmlString());
+                    result.Append(child.ToXmlString(indentContext));
                 }
 
                 result.Append("</");
@@ -758,4 +732,17 @@ namespace Elin.Plugin.Generator
 
         #endregion
     }
+
+    public static class IXmlDocumentNodeExtensions
+    {
+        #region function
+
+        public static string ToXmlString(this IXmlDocumentNode node)
+        {
+            return node.ToXmlString(XmlIndentContext.None);
+        }
+
+        #endregion
+    }
+
 }
