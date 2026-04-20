@@ -20,7 +20,6 @@ namespace Elin.Plugin.Generator
 
         #region function
 
-
         private static bool TryParseDefine<T>(string rawJson, out T result)
         {
             try
@@ -64,7 +63,6 @@ namespace Elin.Plugin.Generator
                 .Select((arr, _) => arr.FirstOrDefault())
             ;
         }
-
 
         #endregion
     }

@@ -317,16 +317,27 @@ namespace Elin.Plugin.Generator
 
     public readonly record struct XmlIndentContext
     {
-        public XmlIndentContext(string indent)
+        public XmlIndentContext(string indent, int level)
         {
             Indent = indent;
+            Level = level;
         }
 
         #region property
 
-        public static XmlIndentContext None { get; } = new XmlIndentContext(string.Empty);
+        public static XmlIndentContext None { get; } = new XmlIndentContext(string.Empty, 0);
 
         public string Indent { get; }
+        public int Level { get; }
+
+        #endregion
+
+        #region function
+
+        public XmlIndentContext Nest()
+        {
+            return new XmlIndentContext(Indent, Level + 1);
+        }
 
         #endregion
     }
@@ -424,7 +435,7 @@ namespace Elin.Plugin.Generator
 
         public string ToXmlString(XmlIndentContext indentContext)
         {
-            return string.Join(string.Empty, Children.Select(a => a.ToXmlString(indentContext)));
+            return string.Join(string.Empty, Children.Select(a => a.ToXmlString(indentContext.Nest())));
         }
 
         #endregion
@@ -504,7 +515,7 @@ namespace Elin.Plugin.Generator
 
                 foreach (var child in Children)
                 {
-                    result.Append(child.ToXmlString(indentContext));
+                    result.Append(child.ToXmlString(indentContext.Nest()));
                 }
 
                 result.Append("</");
@@ -744,5 +755,4 @@ namespace Elin.Plugin.Generator
 
         #endregion
     }
-
 }
