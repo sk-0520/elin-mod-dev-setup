@@ -503,6 +503,9 @@ override int IntValue
 
 なお、 `IgnorePluginConfigAttribute` をプロパティに設定することでそのプロパティはこの置き換え処理は実施されません。
 
+> [!NOTE]
+> これは設計ミスったなぁ、GeneratePluginConfig は個別に定義すべきだった。 依存(子)クラス実装が継承されるとか分からんし。
+
 ## デバッグ
 
 > [!WARNING]

@@ -3,69 +3,13 @@ using Microsoft.CodeAnalysis.Diagnostics;
 using System;
 using System.IO;
 using System.Linq;
-using System.Text.Json;
 
 namespace Elin.Plugin.Generator
 {
     [Generator(LanguageNames.CSharp)]
     internal class PluginInfoGenerator : IIncrementalGenerator
     {
-        #region property
-
-        private static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions()
-        {
-            PropertyNameCaseInsensitive = true,
-            AllowTrailingCommas = true,
-            ReadCommentHandling = JsonCommentHandling.Skip,
-        };
-
-        #endregion
-
         #region function
-
-        private static bool TryParseDefine<T>(string rawJson, out T result)
-        {
-            try
-            {
-                var obj = JsonSerializer.Deserialize<T>(rawJson, JsonSerializerOptions);
-                if (obj is not null)
-                {
-                    result = obj;
-                    return true;
-                }
-            }
-            catch
-            {
-                // EPG012 を出力したい、わからん！
-            }
-            result = default!;
-            return false;
-        }
-
-        private static T? SafeParseDefine<T>(string rawJson)
-            where T : class
-        {
-            if (TryParseDefine<T>(rawJson, out var result))
-            {
-                return result;
-            }
-
-            return null;
-        }
-
-        private static IncrementalValueProvider<T?> CollectDefine<T>(IncrementalValuesProvider<AdditionalText> additionalTextsProvider, Func<AdditionalText, bool> predicate)
-            where T : class
-        {
-            return additionalTextsProvider
-                .Where(predicate)
-                .Select((file, _) => (file: file, json: file.GetText()?.ToString()))
-                .Where(a => a.json is not null)
-                .Select((a, _) => SafeParseDefine<T>(a.json!))
-                .Where(a => a is not null)
-                .Collect()
-                .Select((arr, _) => arr.FirstOrDefault())
-            ;
-        }
 
         private static IncrementalValueProvider<PluginMacro> CollectMacro(IncrementalValueProvider<AnalyzerConfigOptionsProvider> analyzerConfigOptionsProvider)
         {
@@ -95,12 +39,12 @@ namespace Elin.Plugin.Generator
 
         public void Initialize(IncrementalGeneratorInitializationContext context)
         {
-            var define = CollectDefine<PluginDefine>(
+            var define = SourceGeneratorHelper.CollectJsonClass<PluginDefine>(
                 context.AdditionalTextsProvider,
                 file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoFileName
             );
 
-            var devDefine = CollectDefine<PluginDevDefine>(
+            var devDefine = SourceGeneratorHelper.CollectJsonClass<PluginDevDefine>(
                 context.AdditionalTextsProvider,
                 file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoDevFileName
             );
