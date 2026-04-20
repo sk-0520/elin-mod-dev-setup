@@ -67,8 +67,24 @@ namespace Elin.Plugin.Generator.Test
             Assert.Contains(configClassDeclarations, a => a.Identifier.Text == "ConfigConfigEntries");
             Assert.Contains(configClassDeclarations, a => a.Identifier.Text == "ConfigProxy");
 
-            // はい OK
-            // 生成自体はOKなので、使用側テストで挙動確認する
+            // 元クラスに対する拡張の確認
+            var configBindRoot = actualConfigBind.SyntaxTree.GetRoot(TestContext.Current.CancellationToken);
+            var configBindClassDeclarations = configBindRoot
+                .DescendantNodes()
+                .OfType<ClassDeclarationSyntax>()
+                .ToArray()
+            ;
+            // 元クラス名がある
+            Assert.Contains(configBindClassDeclarations, a => a.Identifier.Text == "Config");
+
+            var configBindMethodDeclarations = configBindRoot
+                .DescendantNodes()
+                .OfType<MethodDeclarationSyntax>()
+                .ToArray()
+            ;
+            // ソースジェネレータが生やしたメソッドの確認
+            Assert.Contains(configBindMethodDeclarations, a => a.Identifier.Text == "Bind" && a.Modifiers.Any(SyntaxKind.StaticKeyword));
+            Assert.Contains(configBindMethodDeclarations, a => a.Identifier.Text == "Reset" && !a.Modifiers.Any(SyntaxKind.StaticKeyword));
         }
 
         #endregion
