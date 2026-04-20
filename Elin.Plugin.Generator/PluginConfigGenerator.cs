@@ -409,7 +409,6 @@ namespace Elin.Plugin.Generator
             }
             generatedClassNames.Add(targetSymbol.ToDisplayString());
 
-
             var properties = GetProperties(targetSymbol).ToArray();
             var nestedProperties = GetNestedProperties(properties);
 
