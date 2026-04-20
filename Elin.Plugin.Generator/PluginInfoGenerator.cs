@@ -1,4 +1,5 @@
 using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.Diagnostics;
 using System;
 using System.IO;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace Elin.Plugin.Generator
 
         #region function
 
-        private static bool TryParseDefine<T>(IncrementalGeneratorInitializationContext context, string rawJson, out T result)
+        private static bool TryParseDefine<T>(string rawJson, out T result)
         {
             try
             {
@@ -41,10 +42,10 @@ namespace Elin.Plugin.Generator
             return false;
         }
 
-        private static T? SafeParseDefine<T>(IncrementalGeneratorInitializationContext context, string rawJson)
+        private static T? SafeParseDefine<T>(string rawJson)
             where T : class
         {
-            if (TryParseDefine<T>(context, rawJson, out var result))
+            if (TryParseDefine<T>(rawJson, out var result))
             {
                 return result;
             }
@@ -52,33 +53,23 @@ namespace Elin.Plugin.Generator
             return null;
         }
 
-        #endregion
-
-        #region IIncrementalGenerator
-
-        public void Initialize(IncrementalGeneratorInitializationContext context)
+        private static IncrementalValueProvider<T?> CollectDefine<T>(IncrementalValuesProvider<AdditionalText> additionalTextsProvider, Func<AdditionalText, bool> predicate)
+            where T : class
         {
-            var define = context.AdditionalTextsProvider
-                .Where(file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoFileName)
+            return additionalTextsProvider
+                .Where(predicate)
                 .Select((file, _) => (file: file, json: file.GetText()?.ToString()))
-                .Where(a => a.json != null)
-                .Select((a, _) => SafeParseDefine<PluginDefine>(context, a.json!))
+                .Where(a => a.json is not null)
+                .Select((a, _) => SafeParseDefine<T>(a.json!))
                 .Where(a => a is not null)
                 .Collect()
                 .Select((arr, _) => arr.FirstOrDefault())
             ;
+        }
 
-            var devDefine = context.AdditionalTextsProvider
-                .Where(file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoDevFileName)
-                .Select((file, _) => (file: file, json: file.GetText()?.ToString()))
-                .Where(a => a.json != null)
-                .Select((a, _) => SafeParseDefine<PluginDevDefine>(context, a.json!))
-                .Where(a => a is not null)
-                .Collect()
-                .Select((arr, _) => arr.FirstOrDefault())
-            ;
-
-            var macroProvider = context.AnalyzerConfigOptionsProvider
+        private static IncrementalValueProvider<PluginMacro> CollectMacro(IncrementalValueProvider<AnalyzerConfigOptionsProvider> analyzerConfigOptionsProvider)
+        {
+            return analyzerConfigOptionsProvider
                 .Select((configOptions, token) =>
                 {
                     var macro = new PluginMacro();
@@ -96,6 +87,25 @@ namespace Elin.Plugin.Generator
                     return macro;
                 })
             ;
+        }
+
+        #endregion
+
+        #region IIncrementalGenerator
+
+        public void Initialize(IncrementalGeneratorInitializationContext context)
+        {
+            var define = CollectDefine<PluginDefine>(
+                context.AdditionalTextsProvider,
+                file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoFileName
+            );
+
+            var devDefine = CollectDefine<PluginDevDefine>(
+                context.AdditionalTextsProvider,
+                file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoDevFileName
+            );
+
+            var macroProvider = CollectMacro(context.AnalyzerConfigOptionsProvider);
 
             context.RegisterSourceOutput(define.Combine(devDefine).Combine(macroProvider), (c, x) =>
             {
