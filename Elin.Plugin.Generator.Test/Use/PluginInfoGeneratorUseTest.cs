@@ -59,6 +59,30 @@ namespace Elin.Plugin.Generator.Test.Use
             Assert.Equal(initValue, configBound.Value);
         }
 
+        [Fact]
+        public void NestConfigTest()
+        {
+            var configInstance = new NestConfig()
+            {
+                ChildA = new ChildConfig()
+                {
+                    Data = 123,
+                },
+                ChildB = new ChildConfig()
+                {
+                    Data = 456,
+                },
+                Value = 789,
+            };
+            var configBound = NestConfig.Bind(new BepInEx.Configuration.ConfigFile("NUL", false), configInstance);
+
+            // 値チェック自体にあまり意味はなく、重複したクラス(ChildConfig)があってもソースジェネレーターが重複除外して正しくプロキシクラスを生成させることが目的
+            // そのため、このテストの実行よりコンパイルが通っていれば成功みたいなもの
+            Assert.Equal(123, configBound.ChildA.Data);
+            Assert.Equal(456, configBound.ChildB.Data);
+            Assert.Equal(789, configBound.Value);
+        }
+
         #endregion
     }
 }

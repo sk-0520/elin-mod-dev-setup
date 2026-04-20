@@ -399,9 +399,15 @@ namespace Elin.Plugin.Generator
             return source;
         }
 
-        private IEnumerable<(string source, string fileName)> GenerateConfigSources(SourceProductionContext context, SourceBuilder sourceBuilder, INamedTypeSymbol targetSymbol, bool overrideReset)
+        private IEnumerable<(string source, string fileName)> GenerateConfigSources(SourceProductionContext context, SourceBuilder sourceBuilder, INamedTypeSymbol targetSymbol, bool overrideReset, HashSet<string> generatedClassNames)
         {
             context.CancellationToken.ThrowIfCancellationRequested();
+
+            if (generatedClassNames.Contains(targetSymbol.ToDisplayString()))
+            {
+                yield break;
+            }
+            generatedClassNames.Add(targetSymbol.ToDisplayString());
 
             var properties = GetProperties(targetSymbol).ToArray();
             var nestedProperties = GetNestedProperties(properties);
@@ -410,7 +416,7 @@ namespace Elin.Plugin.Generator
             {
                 context.CancellationToken.ThrowIfCancellationRequested();
 
-                foreach (var configSource in GenerateConfigSources(context, sourceBuilder, (INamedTypeSymbol)nestedProperty.Type, false))
+                foreach (var configSource in GenerateConfigSources(context, sourceBuilder, (INamedTypeSymbol)nestedProperty.Type, false, generatedClassNames))
                 {
                     yield return configSource;
                 }
@@ -546,13 +552,6 @@ namespace Elin.Plugin.Generator
                 var compilation = attribute.SemanticModel.Compilation;
                 var targetSymbol = (INamedTypeSymbol)attribute.TargetSymbol;
 
-                // 既にこの実行で生成済みならスキップ（インスタンスフィールドではなくローカルを使用）
-                if (generatedClassNames.Contains(targetSymbol.ToDisplayString()))
-                {
-                    continue;
-                }
-                generatedClassNames.Add(targetSymbol.ToDisplayString());
-
                 // ネストは無理
                 if (targetSymbol.ContainingType != null)
                 {
@@ -565,7 +564,7 @@ namespace Elin.Plugin.Generator
                     continue;
                 }
 
-                var configSources = GenerateConfigSources(context, sourceBuilder, targetSymbol, true);
+                var configSources = GenerateConfigSources(context, sourceBuilder, targetSymbol, true, generatedClassNames);
                 foreach (var configSource in configSources)
                 {
                     context.AddSource(configSource.fileName, sourceBuilder.Format(configSource.source));
