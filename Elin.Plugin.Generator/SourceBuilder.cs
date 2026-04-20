@@ -315,6 +315,22 @@ namespace Elin.Plugin.Generator
         #endregion
     }
 
+    public readonly record struct XmlIndentContext
+    {
+        public XmlIndentContext(string indent)
+        {
+            Indent = indent;
+        }
+
+        #region property
+
+        public static XmlIndentContext None { get; } = new XmlIndentContext(string.Empty);
+
+        public string Indent { get; }
+
+        #endregion
+    }
+
     public interface IXmlDocumentNode
     {
         #region property
@@ -326,6 +342,7 @@ namespace Elin.Plugin.Generator
         #region function
 
         string ToXmlString();
+        string ToXmlString(XmlIndentContext indentContext);
 
         #endregion
     }
@@ -351,6 +368,11 @@ namespace Elin.Plugin.Generator
 
         public string ToXmlString()
         {
+            return ToXmlString(XmlIndentContext.None);
+        }
+
+        public string ToXmlString(XmlIndentContext indentContext)
+        {
             return XmlBuilder.Escape(Content);
         }
 
@@ -375,6 +397,11 @@ namespace Elin.Plugin.Generator
         public string NodeName => "#comment";
 
         public string ToXmlString()
+        {
+            return ToXmlString(XmlIndentContext.None);
+        }
+
+        public string ToXmlString(XmlIndentContext indentContext)
         {
             var comment = Comment;
             if (comment.Contains("--"))
@@ -408,7 +435,12 @@ namespace Elin.Plugin.Generator
 
         public string ToXmlString()
         {
-            return string.Join(string.Empty, Children.Select(a => a.ToXmlString()));
+            return ToXmlString(XmlIndentContext.None);
+        }
+
+        public string ToXmlString(XmlIndentContext indentContext)
+        {
+            return string.Join(string.Empty, Children.Select(a => a.ToXmlString(indentContext)));
         }
 
         #endregion
@@ -432,6 +464,11 @@ namespace Elin.Plugin.Generator
         public string NodeName => "#cdata-section";
 
         public string ToXmlString()
+        {
+            return ToXmlString(XmlIndentContext.None);
+        }
+
+        public string ToXmlString(XmlIndentContext indentContext)
         {
             return "<![CDATA[" + Content + "]]>";
         }
@@ -462,6 +499,11 @@ namespace Elin.Plugin.Generator
         public string NodeName => ElementName;
 
         public string ToXmlString()
+        {
+            return ToXmlString(XmlIndentContext.None);
+        }
+
+        public string ToXmlString(XmlIndentContext indentContext)
         {
             var result = new StringBuilder();
 
