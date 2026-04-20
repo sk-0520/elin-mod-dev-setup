@@ -500,7 +500,6 @@ namespace Elin.Plugin.Generator
 
             var source = $$"""
             {{sourceBuilder.Header}}
-            #nullable enable
             
             {{sourceBuilder.ToNamespaceCode(targetSymbol)}}
 

@@ -191,7 +191,6 @@ namespace Elin.Plugin.Generator
                 //lang=c#
                 var source = $$"""
                 {{sourceBuilder.Header}}
-                #nullable enable
 
                 using System;
                 using System.IO;
