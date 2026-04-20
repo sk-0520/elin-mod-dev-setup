@@ -1,5 +1,6 @@
 using Microsoft.CodeAnalysis;
 using Microsoft.CodeAnalysis.CSharp;
+using Microsoft.CodeAnalysis.CSharp.Syntax;
 using System;
 using System.Collections.Generic;
 using System.Collections.Immutable;
@@ -12,12 +13,6 @@ namespace Elin.Plugin.Generator
     [Generator(LanguageNames.CSharp)]
     internal class PluginConfigGenerator : IIncrementalGenerator
     {
-        #region property
-
-        private HashSet<string> GeneratedClassNames { get; } = new HashSet<string>();
-
-        #endregion
-
         #region function
 
         private bool IsConfigTarget(ISymbol symbol)
@@ -281,7 +276,7 @@ namespace Elin.Plugin.Generator
             {
                 return $$"""
 
-                public ConfigEntry<{{symbol.Type.ToDisplayString()}}> {{symbol.Name}} { get; set; }
+                public ConfigEntry<{{symbol.Type.ToDisplayString()}}> {{symbol.Name}} { get; set; } = default!;
                 
                 """;
             }
@@ -408,12 +403,6 @@ namespace Elin.Plugin.Generator
         {
             context.CancellationToken.ThrowIfCancellationRequested();
 
-            if (GeneratedClassNames.Contains(targetSymbol.ToDisplayString()))
-            {
-                yield break;
-            }
-            GeneratedClassNames.Add(targetSymbol.ToDisplayString());
-
             var properties = GetProperties(targetSymbol).ToArray();
             var nestedProperties = GetNestedProperties(properties);
 
@@ -456,35 +445,39 @@ namespace Elin.Plugin.Generator
 
             private static {{ToEntriesClassName(typeSymbol)}} {{ToEntriesCreateMethodName(typeSymbol)}}{{propertySymbol?.Name}}(ConfigFile config, {{typeSymbol.Name}} defaultValue)
             {
-                var entries = new {{ToEntriesClassName(typeSymbol)}}();
+                var entries = new {{ToEntriesClassName(typeSymbol)}}() {
+                    {{sourceBuilder.JoinLines(
+                        properties
+                            .Where(a => IsProxyTarget(a))
+                            .Select(a =>
+                            {
+                                var documentComment = GetDocumentComment(a);
+                                var acceptableValue = GetAcceptableValue(context, compilation, sourceBuilder, a);
+
+                                return $$"""
+
+                                {{a.Name}} = config.Bind(
+                                    {{sourceBuilder.ToStringLiteral(sectionName)}},
+                                    {{sourceBuilder.ToStringLiteral(a.Name)}},
+                                    defaultValue.{{a.Name}},
+                                    new ConfigDescription(
+                                        {{sourceBuilder.ToStringLiteral(documentComment ?? string.Empty)}},
+                                        {{acceptableValue ?? "null"}}
+                                    )
+                                ),
+
+                                """;
+                            })
+                    )}}
+                };
 
                 {{sourceBuilder.JoinLines(
-                    properties.Select(a =>
-                    {
-                        if (IsProxyTarget(a))
-                        {
-                            var documentComment = GetDocumentComment(a);
-                            var acceptableValue = GetAcceptableValue(context, compilation, sourceBuilder, a);
-
-                            return $$"""
-
-                            entries.{{a.Name}} = config.Bind(
-                                {{sourceBuilder.ToStringLiteral(sectionName)}},
-                                {{sourceBuilder.ToStringLiteral(a.Name)}},
-                                defaultValue.{{a.Name}},
-                                new ConfigDescription(
-                                    {{sourceBuilder.ToStringLiteral(documentComment ?? string.Empty)}},
-                                    {{acceptableValue ?? "null"}}
-                                )
-                            );
-
-                            """;
-                        }
-                        else
+                    properties
+                        .Where(a => !IsProxyTarget(a))
+                        .Select(a =>
                         {
                             return $"entries.{a.Name} = {ToEntriesCreateMethodName(a.Type)}{a.Name}(config, defaultValue.{a.Name});";
-                        }
-                    })
+                        })
                 )}}
 
                 return entries;
@@ -543,6 +536,8 @@ namespace Elin.Plugin.Generator
 
         private void GenerateSource(SourceProductionContext context, ImmutableArray<GeneratorAttributeSyntaxContext> array)
         {
+            var generatedClassNames = new HashSet<string>();
+
             var sourceBuilder = new SourceBuilder();
             foreach (var attribute in array)
             {
@@ -550,6 +545,13 @@ namespace Elin.Plugin.Generator
 
                 var compilation = attribute.SemanticModel.Compilation;
                 var targetSymbol = (INamedTypeSymbol)attribute.TargetSymbol;
+
+                // 既にこの実行で生成済みならスキップ（インスタンスフィールドではなくローカルを使用）
+                if (generatedClassNames.Contains(targetSymbol.ToDisplayString()))
+                {
+                    continue;
+                }
+                generatedClassNames.Add(targetSymbol.ToDisplayString());
 
                 // ネストは無理
                 if (targetSymbol.ContainingType != null)
@@ -606,12 +608,11 @@ namespace Elin.Plugin.Generator
             {
                 var attributeSource = $$"""
                 {{sourceBuilder.Header}}
-
                 namespace {{GeneratorConstants.GeneratedNamespace}};
 
                 {{sourceBuilder.ApplyXmlDocumentComment(
                     string.Empty,
-                    // lang=xml
+                    //lang=xml
                     """
                     <summary>
                     Mod の設定クラスのルートに付与する属性。
@@ -669,7 +670,7 @@ namespace Elin.Plugin.Generator
 
                 {{sourceBuilder.ApplyXmlDocumentComment(
                     string.Empty,
-                    // lang=xml
+                    //lang=xml
                     """
                     <summary>
                     設定クラス内のプロパティを設定構築から除外する属性。
@@ -721,8 +722,8 @@ namespace Elin.Plugin.Generator
 
             var provider = context.SyntaxProvider.ForAttributeWithMetadataName(
                 $"{GeneratorConstants.GeneratedNamespace}.{GeneratorConstants.GeneratePluginConfigAttributeName}",
-                (node, cancellationToken) => true,
-                (context, cancellationToken) => context
+                static (node, cancellationToken) => node is ClassDeclarationSyntax,
+                static (context, cancellationToken) => context
             ).Collect();
 
             context.RegisterSourceOutput(provider, GenerateSource);
