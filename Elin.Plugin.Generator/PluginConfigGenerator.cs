@@ -185,6 +185,9 @@ namespace Elin.Plugin.Generator
 
         private string? GetDocumentComment(ISymbol symbol)
         {
+            symbol.GetAttributes()
+                .FirstOrDefault(a => a.AttributeClass!.ToDisplayString() == $"{GeneratorConstants.GeneratedNamespace}.{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}")
+            ;
             var xmlComment = symbol.GetDocumentationCommentXml(expandIncludes: true);
 
             if (!string.IsNullOrWhiteSpace(xmlComment))
@@ -428,6 +431,19 @@ namespace Elin.Plugin.Generator
             yield return (source, sourceFileName);
         }
 
+        private static string GetDocumentCommentFromAttribute(AttributeData attribute)
+        {
+            var args = attribute.ConstructorArguments;
+
+            var langProperty = args.Length == 2 && (int)(args[1].Value!) == 1 /* PluginConfigDescriptionTarget.General */
+                ? "General"
+                : "Config"
+            ;
+            var targetProperty = (string)args[0].Value!;
+
+            return $"Elin.Plugin.Main.PluginHelpers.ModHelper.Lang.{langProperty}.{targetProperty}";
+        }
+
         private IEnumerable<string> GenerateBindSources(SourceProductionContext context, Compilation compilation, SourceBuilder sourceBuilder, string parentSection, INamedTypeSymbol typeSymbol, IPropertySymbol? propertySymbol)
         {
             var properties = GetProperties(typeSymbol).ToArray();
@@ -457,8 +473,8 @@ namespace Elin.Plugin.Generator
                             .Where(a => IsProxyTarget(a))
                             .Select(a =>
                             {
-                                var documentComment = GetDocumentComment(a);
                                 var acceptableValue = GetAcceptableValue(context, compilation, sourceBuilder, a);
+                                var attr = a.GetAttributes().FirstOrDefault(attr => attr.AttributeClass!.ToDisplayString() == $"{GeneratorConstants.GeneratedNamespace}.{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}");
 
                                 return $$"""
 
@@ -467,7 +483,10 @@ namespace Elin.Plugin.Generator
                                     {{sourceBuilder.ToStringLiteral(a.Name)}},
                                     defaultValue.{{a.Name}},
                                     new ConfigDescription(
-                                        {{sourceBuilder.ToStringLiteral(documentComment ?? string.Empty)}},
+                                        {{(attr is null
+                                            ? "null"
+                                            : GetDocumentCommentFromAttribute(attr)
+                                        )}},
                                         {{acceptableValue ?? "null"}}
                                     )
                                 ),
@@ -712,6 +731,26 @@ namespace Elin.Plugin.Generator
                         """;
                     })
                 )}}
+
+                internal enum PluginConfigDescriptionTarget
+                {
+                    Config = 0,
+                    General = 1,
+                }
+
+                [{{sourceBuilder.ToCode<System.AttributeUsageAttribute>()}}({{sourceBuilder.ToCode(AttributeTargets.Property)}}, AllowMultiple = false)]
+                internal sealed class {{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}}: {{sourceBuilder.ToCode<System.Attribute>()}}
+                {
+                    public {{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}}(string propertyName, PluginConfigDescriptionTarget target)
+                    {
+                        //NOP
+                    }
+
+                    public {{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}}(string configName)
+                    {
+                        //NOP
+                    }
+                }
 
                 """;
 
