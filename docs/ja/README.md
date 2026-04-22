@@ -551,7 +551,6 @@ public partial class MyModConfig
     // "general" で使用されているプロパティを使用する場合は第二引数を指定
     [GeneratePluginConfigDescription(nameof(PluginLocalizationGeneral.ItemColor), PluginConfigDescriptionTarget.General)]
     public virtual string ItemColor { get; set; }
-
 }
 ```
 
@@ -572,7 +571,7 @@ class Plugin
 すると以下のように設定が作られます(言語関係なく)。
 
 ```ini
-[Config]
+[MyModConfig]
 
 ## item name
 # Setting type: String
@@ -599,7 +598,7 @@ class Plugin
 ```
 
 ```ini
-[Config]
+[MyModConfig]
 
 ## アイテム名
 # Setting type: String
