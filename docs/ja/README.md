@@ -614,6 +614,32 @@ ItemColor =
 > [!NOTE]
 > まぁあんまり気にしなくて良いかもです。
 
+いざやってみると結構面倒なので以下プロパティを設定するのが良さげかと。
+
+```csharp
+using Elin.Plugin.Generated;
+
+[GeneratePluginConfig]
+public partial class MyModConfig
+{
+    // 名前付きパラメーター AllLanguage を指定
+    [GeneratePluginConfigDescription(nameof(PluginLocalizationConfig.ItemName), AllLanguage = true)]
+    public virtual string ItemName { get; set; }
+}
+```
+
+```ini
+[MyModConfig]
+
+## [JP] アイテム名
+## [EN] item name
+# Setting type: String
+# Default value: 
+ItemName = 
+```
+
+よう分からんくなったら全部出せばよろし。
+
 ## デバッグ
 
 > [!WARNING]

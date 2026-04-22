@@ -358,7 +358,20 @@ namespace Elin.Plugin.Generator
             ;
             var targetProperty = (string)args[0].Value!;
 
-            // 生成先の名前空間階層に影響されないよう、グローバル修飾した完全修飾名を返す
+            var allLang = attribute.NamedArguments.FirstOrDefault(a => a.Key == "AllLanguage").Value;
+            if (allLang.Value is true)
+            {
+                return $$"""
+                string.Join(
+                    Environment.NewLine,
+                    global::Elin.Plugin.Main.PluginHelpers.ModHelper.Lang.{{langProperty}}
+                        .Items["{{targetProperty}}"]
+                        .GetLanguages()
+                        .Select(a => $"[{a.Key}] {a.Value}")
+                )
+                """;
+            }
+
             return $"global::Elin.Plugin.Main.PluginHelpers.ModHelper.Lang.{langProperty}.{targetProperty}";
         }
 
@@ -438,10 +451,11 @@ namespace Elin.Plugin.Generator
             var source = $$"""
             {{sourceBuilder.Header}}
             
-            {{sourceBuilder.ToNamespaceCode(targetSymbol)}}
-
+            using System;
+            using System.Linq;
             using BepInEx.Configuration;
 
+            {{sourceBuilder.ToNamespaceCode(targetSymbol)}}
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Performance", "CA1852: 型'{{targetSymbol.Name}}' に含まれるアセンブリにはサブタイプがなく、外部から参照できないため、シールできます", Justification = "クラスを生やすので無視無視")]
             [System.Diagnostics.CodeAnalysis.SuppressMessage("Maintainability", "CA1515: パブリック型を内部にすることを検討してください", Justification = "いやべつに。。。")]
             partial class {{targetSymbol.Name}}
@@ -668,6 +682,15 @@ namespace Elin.Plugin.Generator
                     {
                         //NOP
                     }
+
+                    #region property
+
+                    /// <summary>
+                    /// 全部の言語を出力対象にする。
+                    /// </summary>
+                    public bool AllLanguage { get; set; }
+
+                    #endregion
                 }
 
                 """;

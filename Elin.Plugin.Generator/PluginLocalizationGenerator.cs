@@ -183,6 +183,7 @@ namespace Elin.Plugin.Generator
                 using System;
                 using System.IO;
                 using System.Text;
+                using System.Linq;
                 using System.Xml.Serialization;
                 using System.Collections.Generic;
                 using System.Text.RegularExpressions;
@@ -253,6 +254,17 @@ namespace Elin.Plugin.Generator
                         }
                 
                         return data;
+                    }
+
+                    public IEnumerable<KeyValuePair<string, string>> GetLanguages()
+                    {
+                        return new [] {
+                            {{sourceBuilder.JoinLines(templateLocalizationItem.Languages
+                                .Select(a => $"new KeyValuePair<string, string?>({sourceBuilder.ToStringLiteral(a.Key)}, {a.Key}),"))}}
+                        }
+                            .Where(a => !string.IsNullOrEmpty(a.Value))
+                            .Select(a => new KeyValuePair<string, string>(a.Key, a.Value!))
+                        ;
                     }
 
                     #endregion
