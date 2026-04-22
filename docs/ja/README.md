@@ -534,7 +534,7 @@ override int IntValue
 }
 ```
 
-設定クラスに `GeneratePluginConfigDescriptionAttribute` を付与。
+設定クラスにの各プロパティに `GeneratePluginConfigDescriptionAttribute` を付与。
 
 内部的には `ModHelper` クラスに経由するための目印になります。
 

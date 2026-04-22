@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace Elin.Plugin.Generator
 {
@@ -125,88 +124,6 @@ namespace Elin.Plugin.Generator
         private string ToEntriesCreateMethodName(ISymbol symbol)
         {
             return $"Create{ToEntriesClassName(symbol)}";
-        }
-
-        private List<string> ExpandDocumentCommentCore(XElement element)
-        {
-            var result = new List<string>();
-
-            foreach (var node in element.Nodes())
-            {
-                if (node.NodeType == System.Xml.XmlNodeType.Text)
-                {
-                    var textNode = (XText)node;
-                    result.Add(textNode.Value.Trim());
-                }
-                else if (node.NodeType == System.Xml.XmlNodeType.Element)
-                {
-                    var childElement = (XElement)node;
-
-                    if (childElement.Name == "see")
-                    {
-                        var cref = childElement.Attribute("cref")!.Value;
-                        var index = cref.LastIndexOf('.');
-                        var value = index == -1 ? cref : cref.Substring(index + 1);
-                        result.Add(value);
-                    }
-                    else if (childElement.Name == "para")
-                    {
-                        result.Add(Environment.NewLine);
-                        var results = ExpandDocumentCommentCore(childElement);
-                        result.AddRange(results);
-                    }
-                    else
-                    {
-                        var results = ExpandDocumentCommentCore(childElement);
-                        result.AddRange(results);
-                    }
-                }
-                else
-                {
-                    result.Add(node.ToString());
-                }
-            }
-
-            return result;
-        }
-
-        private string? ExpandDocumentComment(XElement? element)
-        {
-            if (element is null)
-            {
-                return null;
-            }
-
-            return string.Join(
-                string.Empty,
-                ExpandDocumentCommentCore(element)
-            );
-        }
-
-        private string? GetDocumentComment(ISymbol symbol)
-        {
-            symbol.GetAttributes()
-                .FirstOrDefault(a => a.AttributeClass!.ToDisplayString() == $"{GeneratorConstants.GeneratedNamespace}.{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}")
-            ;
-            var xmlComment = symbol.GetDocumentationCommentXml(expandIncludes: true);
-
-            if (!string.IsNullOrWhiteSpace(xmlComment))
-            {
-                var doc = XDocument.Parse(xmlComment);
-                var items = new[]
-                {
-                    ExpandDocumentComment(doc.Root!.Element("summary")),
-                    ExpandDocumentComment(doc.Root!.Element("remarks")),
-                };
-                return string.Join(
-                    Environment.NewLine,
-                    items
-                        .Where(a => !string.IsNullOrEmpty(a))
-                        .Select(a => a!.Trim())
-                );
-            }
-
-            return xmlComment!;
         }
 
         private string? GetAcceptableValue(SourceProductionContext context, Compilation compilation, SourceBuilder sourceBuilder, IPropertySymbol symbol)

@@ -32,55 +32,6 @@
           "description": "韓国語翻訳"
         }
       }
-    },
-    "FormatLanguage": {
-      "type": "object",
-      "patternProperties": {
-        "^[A-Z][a-z0-9_][a-zA-Z0-9_]*$": {
-          "allOf": [
-            {
-              "$ref": "#/definitions/Language"
-            },
-            {
-              "type": "object",
-              "required": [
-                "parameters"
-              ],
-              "properties": {
-                "parameters": {
-                  "type": "object",
-                  "additionalProperties": false,
-                  "patternProperties": {
-                    "^[A-Z][A-Z0-9_]*$": {
-                      "type": "object",
-                      "additionalProperties": false,
-                      "required": [
-                        "type"
-                      ],
-                      "properties": {
-                        "type": {
-                          "type": "string",
-                          "description": "パラメータの型(C#のプリミティブ型)",
-                          "enum": [
-                            "int",
-                            "float",
-                            "double",
-                            "string"
-                          ]
-                        },
-                        "format": {
-                          "type": "string",
-                          "description": "type.ToString() の書式指定文字列"
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          ]
-        }
-      }
     }
   },
   "type": "object",
@@ -111,7 +62,63 @@
       "additionalProperties": false,
       "patternProperties": {
         "^[A-Z][a-z0-9_][a-zA-Z0-9_]*$": {
-          "$ref": "#/definitions/FormatLanguage"
+          "type": "object",
+          "required": [
+            "JP",
+            "EN",
+            "parameters"
+          ],
+          "properties": {
+            "JP": {
+              "type": "string",
+              "description": "日本語翻訳"
+            },
+            "EN": {
+              "type": "string",
+              "description": "英語翻訳"
+            },
+            "CN": {
+              "type": "string",
+              "description": "中国語翻訳"
+            },
+            "ZHTW": {
+              "type": "string",
+              "description": "繁体字中国語翻訳"
+            },
+            "KR": {
+              "type": "string",
+              "description": "韓国語翻訳"
+            },
+            "parameters": {
+              "type": "object",
+              "additionalProperties": false,
+              "patternProperties": {
+                "^[A-Z][A-Z0-9_-]*$": {
+                  "type": "object",
+                  "additionalProperties": false,
+                  "required": [
+                    "type"
+                  ],
+                  "properties": {
+                    "type": {
+                      "type": "string",
+                      "description": "パラメータの型(C#のプリミティブ型)",
+                      "enum": [
+                        "int",
+                        "float",
+                        "double",
+                        "string"
+                      ]
+                    },
+                    "format": {
+                      "type": "string",
+                      "description": "type.ToString() の書式指定文字列"
+                    }
+                  }
+                }
+              }
+            }
+          }
         }
       }
     },
