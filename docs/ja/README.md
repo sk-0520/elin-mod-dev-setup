@@ -534,9 +534,9 @@ override int IntValue
 }
 ```
 
-設定クラスにの各プロパティに `GeneratePluginConfigDescriptionAttribute` を付与。
+設定クラスの各プロパティに `GeneratePluginConfigDescriptionAttribute` を付与。
 
-内部的には `ModHelper` クラスに経由するための目印になります。
+内部的には `ModHelper` クラスを経由するための目印になります。
 
 ```csharp
 using Elin.Plugin.Generated;
