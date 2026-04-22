@@ -6,7 +6,6 @@ using System.Collections.Generic;
 using System.Collections.Immutable;
 using System.IO;
 using System.Linq;
-using System.Xml.Linq;
 
 namespace Elin.Plugin.Generator
 {
@@ -125,85 +124,6 @@ namespace Elin.Plugin.Generator
         private string ToEntriesCreateMethodName(ISymbol symbol)
         {
             return $"Create{ToEntriesClassName(symbol)}";
-        }
-
-        private List<string> ExpandDocumentCommentCore(XElement element)
-        {
-            var result = new List<string>();
-
-            foreach (var node in element.Nodes())
-            {
-                if (node.NodeType == System.Xml.XmlNodeType.Text)
-                {
-                    var textNode = (XText)node;
-                    result.Add(textNode.Value.Trim());
-                }
-                else if (node.NodeType == System.Xml.XmlNodeType.Element)
-                {
-                    var childElement = (XElement)node;
-
-                    if (childElement.Name == "see")
-                    {
-                        var cref = childElement.Attribute("cref")!.Value;
-                        var index = cref.LastIndexOf('.');
-                        var value = index == -1 ? cref : cref.Substring(index + 1);
-                        result.Add(value);
-                    }
-                    else if (childElement.Name == "para")
-                    {
-                        result.Add(Environment.NewLine);
-                        var results = ExpandDocumentCommentCore(childElement);
-                        result.AddRange(results);
-                    }
-                    else
-                    {
-                        var results = ExpandDocumentCommentCore(childElement);
-                        result.AddRange(results);
-                    }
-                }
-                else
-                {
-                    result.Add(node.ToString());
-                }
-            }
-
-            return result;
-        }
-
-        private string? ExpandDocumentComment(XElement? element)
-        {
-            if (element is null)
-            {
-                return null;
-            }
-
-            return string.Join(
-                string.Empty,
-                ExpandDocumentCommentCore(element)
-            );
-        }
-
-        private string? GetDocumentComment(ISymbol symbol)
-        {
-            var xmlComment = symbol.GetDocumentationCommentXml(expandIncludes: true);
-
-            if (!string.IsNullOrWhiteSpace(xmlComment))
-            {
-                var doc = XDocument.Parse(xmlComment);
-                var items = new[]
-                {
-                    ExpandDocumentComment(doc.Root!.Element("summary")),
-                    ExpandDocumentComment(doc.Root!.Element("remarks")),
-                };
-                return string.Join(
-                    Environment.NewLine,
-                    items
-                        .Where(a => !string.IsNullOrEmpty(a))
-                        .Select(a => a!.Trim())
-                );
-            }
-
-            return xmlComment!;
         }
 
         private string? GetAcceptableValue(SourceProductionContext context, Compilation compilation, SourceBuilder sourceBuilder, IPropertySymbol symbol)
@@ -428,6 +348,20 @@ namespace Elin.Plugin.Generator
             yield return (source, sourceFileName);
         }
 
+        private static string GetDocumentCommentFromAttribute(AttributeData attribute)
+        {
+            var args = attribute.ConstructorArguments;
+
+            var langProperty = args.Length == 2 && (int)(args[1].Value!) == 1 /* PluginConfigDescriptionTarget.General */
+                ? "General"
+                : "Config"
+            ;
+            var targetProperty = (string)args[0].Value!;
+
+            // 生成先の名前空間階層に影響されないよう、グローバル修飾した完全修飾名を返す
+            return $"global::Elin.Plugin.Main.PluginHelpers.ModHelper.Lang.{langProperty}.{targetProperty}";
+        }
+
         private IEnumerable<string> GenerateBindSources(SourceProductionContext context, Compilation compilation, SourceBuilder sourceBuilder, string parentSection, INamedTypeSymbol typeSymbol, IPropertySymbol? propertySymbol)
         {
             var properties = GetProperties(typeSymbol).ToArray();
@@ -457,8 +391,8 @@ namespace Elin.Plugin.Generator
                             .Where(a => IsProxyTarget(a))
                             .Select(a =>
                             {
-                                var documentComment = GetDocumentComment(a);
                                 var acceptableValue = GetAcceptableValue(context, compilation, sourceBuilder, a);
+                                var attr = a.GetAttributes().FirstOrDefault(attr => attr.AttributeClass!.ToDisplayString() == $"{GeneratorConstants.GeneratedNamespace}.{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}");
 
                                 return $$"""
 
@@ -467,7 +401,10 @@ namespace Elin.Plugin.Generator
                                     {{sourceBuilder.ToStringLiteral(a.Name)}},
                                     defaultValue.{{a.Name}},
                                     new ConfigDescription(
-                                        {{sourceBuilder.ToStringLiteral(documentComment ?? string.Empty)}},
+                                        {{(attr is null
+                                            ? sourceBuilder.EmptyStringLiteral
+                                            : GetDocumentCommentFromAttribute(attr)
+                                        )}},
                                         {{acceptableValue ?? "null"}}
                                     )
                                 ),
@@ -712,6 +649,26 @@ namespace Elin.Plugin.Generator
                         """;
                     })
                 )}}
+
+                internal enum PluginConfigDescriptionTarget
+                {
+                    Config = 0,
+                    General = 1,
+                }
+
+                [{{sourceBuilder.ToCode<System.AttributeUsageAttribute>()}}({{sourceBuilder.ToCode(AttributeTargets.Property)}}, AllowMultiple = false)]
+                internal sealed class {{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}}: {{sourceBuilder.ToCode<System.Attribute>()}}
+                {
+                    public {{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}}(string propertyName, PluginConfigDescriptionTarget target)
+                    {
+                        //NOP
+                    }
+
+                    public {{GeneratorConstants.GeneratePluginConfigDescriptionAttributeName}}(string configName)
+                    {
+                        //NOP
+                    }
+                }
 
                 """;
 
