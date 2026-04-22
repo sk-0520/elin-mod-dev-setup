@@ -372,7 +372,6 @@ namespace Elin.Plugin.Generator
                 """;
             }
 
-            // 生成先の名前空間階層に影響されないよう、グローバル修飾した完全修飾名を返す
             return $"global::Elin.Plugin.Main.PluginHelpers.ModHelper.Lang.{langProperty}.{targetProperty}";
         }
 
