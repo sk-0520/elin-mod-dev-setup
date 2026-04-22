@@ -341,6 +341,10 @@ Elin の言語設定を英語に変えて再度呼び出すと「Departing in 10
 
 注意点として引数は名前付きで呼び出す必要があります（アナライザで強制されます）。
 
+#### `$.config`
+
+「設定クラスと Localization.json」を参照してください。
+
 #### 言語指定
 
 設定できる言語は以下の通りです。
@@ -505,6 +509,111 @@ override int IntValue
 
 > [!NOTE]
 > これは設計ミスったなぁ、GeneratePluginConfig は個別に定義すべきだった。 依存(子)クラス実装が継承されるとか分からんし。
+
+### 設定クラスと Localization.json
+
+`BepInEx.Configuration` で生成されるファイルの設定項目に対する説明もローカライズ可能ですが、少し注意点があります。
+
+まず Localization.json の `$.config` プロパティに説明としてのプロパティを追加します。
+
+```json
+{
+  "general": {
+    "ItemColor": {
+      "JP": "アイテムの色",
+      "EN": "item color"
+    }
+  },
+  "format": {},
+  "config": {
+    "ItemName": {
+      "JP": "アイテム名",
+      "EN": "item name"
+    }
+  }
+}
+```
+
+設定クラスに `GeneratePluginConfigDescriptionAttribute` を付与。
+
+内部的には `ModHelper` クラスに経由するための目印になります。
+
+```csharp
+using Elin.Plugin.Generated;
+
+[GeneratePluginConfig]
+public partial class MyModConfig
+{
+    // "config" から生成されたプロパティ名を指定
+    [GeneratePluginConfigDescription(nameof(PluginLocalizationConfig.ItemName))]
+    public virtual string ItemName { get; set; }
+
+    // "general" で使用されているプロパティを使用する場合は第二引数を指定
+    [GeneratePluginConfigDescription(nameof(PluginLocalizationGeneral.ItemColor), PluginConfigDescriptionTarget.General)]
+    public virtual string ItemColor { get; set; }
+
+}
+```
+
+設定をバインド。
+
+```csharp
+// 簡略化のためテンプレート提供 Plugin.cs と構造は異なります。
+class Plugin
+{
+    void Awake()
+    {
+        // バインド
+        var config = MyModConfig.Bind(Config, new MyModConfig());
+    }
+}
+```
+
+すると以下のように設定が作られます(言語関係なく)。
+
+```ini
+[Config]
+
+## item name
+# Setting type: String
+# Default value: 
+ItemName = 
+
+## item color
+# Setting type: String
+# Default value: 
+ItemColor = 
+```
+
+`Awake` 時点では言語設定が英語になっているため、ローカライズを考慮する場合は `Start` での対応が必要になります。
+
+```csharp
+class Plugin
+{
+    void Start()
+    {
+        // バインド
+        var config = MyModConfig.Bind(Config, new MyModConfig());
+    }
+}
+```
+
+```ini
+[Config]
+
+## アイテム名
+# Setting type: String
+# Default value: 
+ItemName = 
+
+## アイテムの色
+# Setting type: String
+# Default value: 
+ItemColor = 
+```
+
+> [!NOTE]
+> まぁあんまり気にしなくて良いかもです。
 
 ## デバッグ
 
