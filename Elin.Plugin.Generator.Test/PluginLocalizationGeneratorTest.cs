@@ -14,6 +14,7 @@ namespace Elin.Plugin.Generator.Test
         private string CommonFormatArgumentType { get; } = "IReadOnlyDictionary<string, string>";
 
         #endregion
+
         #region function
 
         [Fact]
@@ -35,6 +36,8 @@ namespace Elin.Plugin.Generator.Test
                             "general": {
                             },
                             "format": {
+                            },
+                            "config": {
                             }
                         }
                         """
@@ -73,6 +76,7 @@ namespace Elin.Plugin.Generator.Test
             Assert.Contains(classDeclarations, a => a.Identifier.Text == "PluginLocalization");
             Assert.Contains(classDeclarations, a => a.Identifier.Text == "PluginLocalizationGeneral");
             Assert.Contains(classDeclarations, a => a.Identifier.Text == "PluginLocalizationFormatter");
+            Assert.Contains(classDeclarations, a => a.Identifier.Text == "PluginLocalizationConfig");
 
             var interfaceDeclarations = root
                 .DescendantNodes()
@@ -96,6 +100,14 @@ namespace Elin.Plugin.Generator.Test
                 .Where(a => !IgnorePropertyNames.Contains(a.Identifier.ValueText))
             ;
             Assert.Empty(actualFormatterProps);
+
+            var actualConfig = classDeclarations.First(a => a.Identifier.Text == "PluginLocalizationConfig");
+            var actualConfigProps = actualConfig
+                .DescendantNodes()
+                .OfType<PropertyDeclarationSyntax>()
+                .Where(a => !IgnorePropertyNames.Contains(a.Identifier.ValueText))
+            ;
+            Assert.Empty(actualConfigProps);
         }
 
         [Fact]
@@ -125,6 +137,8 @@ namespace Elin.Plugin.Generator.Test
                                 }
                             },
                             "format": {
+                            },
+                            "config": {
                             }
                         }
                         """
@@ -208,6 +222,8 @@ namespace Elin.Plugin.Generator.Test
                                         }
                                     }
                                 }
+                            },
+                            "config": {
                             }
                         }
                         """

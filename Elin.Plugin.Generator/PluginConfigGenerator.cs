@@ -484,7 +484,7 @@ namespace Elin.Plugin.Generator
                                     defaultValue.{{a.Name}},
                                     new ConfigDescription(
                                         {{(attr is null
-                                            ? "null"
+                                            ? sourceBuilder.EmptyStringLiteral
                                             : GetDocumentCommentFromAttribute(attr)
                                         )}},
                                         {{acceptableValue ?? "null"}}
