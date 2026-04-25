@@ -267,7 +267,7 @@ namespace Elin.Plugin.Generator
                     public static bool IsEnabledLogFile => !string.IsNullOrWhiteSpace(LogFile) && !LogFile.Equals("NUL", StringComparison.OrdinalIgnoreCase);
 
                     {{docHeader("mod", "disableDebugPublish")}}
-                    public static bool DisableDebugPublish = {{define.Mod.DisableDebugPublish.ToString().ToLowerInvariant()}}
+                    public static bool DisableDebugPublish = {{define.Mod.DisableDebugPublish.ToString().ToLowerInvariant()}};
                 #endif
                 }
                 """;

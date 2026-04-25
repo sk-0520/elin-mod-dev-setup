@@ -2,7 +2,9 @@ using BepInEx;
 using Elin.Plugin.Generated;
 using Elin.Plugin.Main.PluginHelpers;
 using HarmonyLib;
+using System;
 using System.Threading;
+using UnityEngine.Events;
 
 namespace Elin.Plugin.Main
 {
@@ -39,6 +41,7 @@ namespace Elin.Plugin.Main
             {
                 harmony.PatchAll();
             }
+            PatchTemplate(harmony);
         }
 
         public void OnDestroy()
@@ -46,6 +49,38 @@ namespace Elin.Plugin.Main
             OnDestroyPlugin();
             ModHelper.Destroy();
         }
+
+        private partial void PatchTemplate(Harmony harmony);
+
+#if DEBUG
+
+        private static bool PatchTemplatePublishPrefix(Func<string> funcText, UnityAction action)
+        {
+            ModHelper.LogDev($"idLang: {funcText}, hideAfter: {action}");
+            if (funcText() == "mod_publish")
+            {
+                return false;
+            }
+
+            return true;
+        }
+
+        private void PatchTemplatePublish(Harmony harmony)
+        {
+            var addButtonOriginMethod = AccessTools.Method(typeof(UIContextMenu), nameof(UIContextMenu.AddButton), new[] { typeof(Func<string>), typeof(UnityAction) });
+            var addButtonPrefixMethod = AccessTools.Method(typeof(Plugin), nameof(PatchTemplatePublishPrefix));
+            ModHelper.LogDev($"addButtonOriginMethod: {addButtonOriginMethod}, addButtonPrefixMethod: {addButtonPrefixMethod}");
+            harmony.Patch(
+                addButtonOriginMethod,
+                prefix: new HarmonyMethod(addButtonPrefixMethod)
+            );
+        }
+
+        private partial void PatchTemplate(Harmony harmony)
+        {
+            PatchTemplatePublish(harmony);
+        }
+#endif
 
         #endregion
     }

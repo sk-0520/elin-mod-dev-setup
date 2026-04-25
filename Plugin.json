@@ -17,6 +17,7 @@
   "mod": {
     "version": "0.0.0",
     "useDebugId": true,
-    "log": "NUL"
+    "log": "NUL",
+    "disableDebugPublish": true
   }
 }
