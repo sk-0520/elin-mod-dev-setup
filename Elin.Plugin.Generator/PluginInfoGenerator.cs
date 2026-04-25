@@ -33,77 +33,43 @@ namespace Elin.Plugin.Generator
             ;
         }
 
-        #endregion
-
-        #region IIncrementalGenerator
-
-        public void Initialize(IncrementalGeneratorInitializationContext context)
+        private static void GenerateSource(SourceProductionContext context, PluginDefine define, PluginMacro macro)
         {
-            var define = SourceGeneratorHelper.CollectJsonClass<PluginDefine>(
-                context.AdditionalTextsProvider,
-                file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoFileName
-            );
-
-            var devDefine = SourceGeneratorHelper.CollectJsonClass<PluginDevDefine>(
-                context.AdditionalTextsProvider,
-                file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoDevFileName
-            );
-
-            var macroProvider = CollectMacro(context.AnalyzerConfigOptionsProvider);
-
-            context.RegisterSourceOutput(define.Combine(devDefine).Combine(macroProvider), (c, x) =>
+            /*
+            //TODO: バージョンとって来たかったけど、どこで定義されてるか分からんし、アセンブリから取れるのかもわからん
+            var elinVersion = define.Package.ElinVersion;
+            if (elinVersion == GeneratorConstants.ForceLatestElinVersion)
             {
-                var define = x.Left.Left;
-                var devDefine = x.Left.Right;
-                var macro = x.Right;
-                if (define is null)
+                if (File.Exists(macro.ElinModulePath))
                 {
-                    return;
+                    // バージョンってどこで定義されてんねん
                 }
+            }
+            if (elinVersion == GeneratorConstants.ForceLatestElinVersion)
+            {
+                throw new InvalidOperationException($"最新バージョン指定にもかかわらず、 Elin からバージョン情報を取得できなかった");
+            }
+            */
 
-                if (devDefine is not null)
-                {
-                    if (devDefine.Log is not null)
-                    {
-                        define.Mod.Log = devDefine.Log;
-                    }
-                }
-
-                /*
-                //TODO: バージョンとって来たかったけど、どこで定義されてるか分からんし、アセンブリから取れるのかもわからん
-                var elinVersion = define.Package.ElinVersion;
-                if (elinVersion == GeneratorConstants.ForceLatestElinVersion)
-                {
-                    if (File.Exists(macro.ElinModulePath))
-                    {
-                        // バージョンってどこで定義されてんねん
-                    }
-                }
-                if (elinVersion == GeneratorConstants.ForceLatestElinVersion)
-                {
-                    throw new InvalidOperationException($"最新バージョン指定にもかかわらず、 Elin からバージョン情報を取得できなかった");
-                }
-                */
-
-                if (string.IsNullOrEmpty(macro.AssemblyName) || macro.AssemblyName.IndexOfAny(['\\', '/', ':', '*', '?', '\"', '<', '>', '|']) != -1)
-                {
-                    c.ReportDiagnostic(Diagnostic.Create(
-                        DiagnosticDescriptors.EPG011,
-                        Location.None
-                    ));
-                    return;
-                }
+            if (string.IsNullOrEmpty(macro.AssemblyName) || macro.AssemblyName.IndexOfAny(['\\', '/', ':', '*', '?', '\"', '<', '>', '|']) != -1)
+            {
+                context.ReportDiagnostic(Diagnostic.Create(
+                    DiagnosticDescriptors.EPG011,
+                    Location.None
+                ));
+                return;
+            }
 
 
-                var sourceBuilder = new SourceBuilder();
+            var sourceBuilder = new SourceBuilder();
 
-                string docHeader(string parent, string property)
-                {
-                    return sourceBuilder.Xml.Build(g => g.Summary($"{GeneratorConstants.PluginInfoFileName}: $.{parent}.{property}"));
-                }
+            string docHeader(string parent, string property)
+            {
+                return sourceBuilder.Xml.Build(g => g.Summary($"{GeneratorConstants.PluginInfoFileName}: $.{parent}.{property}"));
+            }
 
-                //lang=c#
-                var source = $$"""
+            //lang=c#
+            var source = $$"""
                 {{sourceBuilder.Header}}
 
                 using System;
@@ -115,16 +81,16 @@ namespace Elin.Plugin.Generator
 
                 #pragma warning disable CS1591 // XML コメントがありません
                 {{sourceBuilder.Xml.Build(g =>
-                {
-                    return g.Fragment([
-                        g.Summary("package.xml を生成するためだけのクラス。"),
+            {
+                return g.Fragment([
+                    g.Summary("package.xml を生成するためだけのクラス。"),
                         g.Remarks([
                             g.SeeLangword("public"),
                             g.Text("だがプラグイン側では使用せず、ビルド時のみ使用する想定。")
                         ]),
                         g.SeeAlsoCref("Package")
-                    ]);
-                })}}
+                ]);
+            })}}
                 [XmlRoot("Meta")]
                 public class MsBuildOnlyPackageXml
                 {
@@ -193,7 +159,7 @@ namespace Elin.Plugin.Generator
                 #pragma warning restore CS1591 // XML コメントがありません
 
                 {{sourceBuilder.Xml.Build(g => g.Fragment([
-                    g.Summary("package.xml 参照情報。"),
+                g.Summary("package.xml 参照情報。"),
                     g.SeeAlsoHref("https://docs.google.com/document/d/e/2PACX-1vQSITB8aYTycrnn3PxxGnPjNZ2_y1G3LDfXjC_PM5S_mTPCh6fv1vcj1bkfPbbUZ88WVb5_7T-62zYc/pub"),
                 ]))}}
                 internal static class Package
@@ -303,7 +269,46 @@ namespace Elin.Plugin.Generator
                 #endif
                 }
                 """;
-                c.AddSource("PluginInfo.g.cs", sourceBuilder.Format(source));
+            context.AddSource("PluginInfo.g.cs", sourceBuilder.Format(source));
+        }
+
+        #endregion
+
+        #region IIncrementalGenerator
+
+        public void Initialize(IncrementalGeneratorInitializationContext context)
+        {
+            var define = SourceGeneratorHelper.CollectJsonClass<PluginDefine>(
+                context.AdditionalTextsProvider,
+                file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoFileName
+            );
+
+            var devDefine = SourceGeneratorHelper.CollectJsonClass<PluginDevDefine>(
+                context.AdditionalTextsProvider,
+                file => Path.GetFileName(file.Path) == GeneratorConstants.PluginInfoDevFileName
+            );
+
+            var macroProvider = CollectMacro(context.AnalyzerConfigOptionsProvider);
+
+            context.RegisterSourceOutput(define.Combine(devDefine).Combine(macroProvider), static (c, x) =>
+            {
+                var define = x.Left.Left;
+                var devDefine = x.Left.Right;
+                var macro = x.Right;
+                if (define is null)
+                {
+                    return;
+                }
+
+                if (devDefine is not null)
+                {
+                    if (devDefine.Log is not null)
+                    {
+                        define.Mod.Log = devDefine.Log;
+                    }
+                }
+
+                GenerateSource(c, define, macro);
             });
         }
 
