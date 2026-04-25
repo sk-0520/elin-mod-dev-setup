@@ -123,7 +123,8 @@
         },
         "disableDebugPublish": {
           "type": "boolean",
-          "description": "デバッグ時に公開を無効にするかどうか。基本的に true で OK"
+          "description": "デバッグ時に公開を無効にするかどうか。基本的に true で OK",
+          "default": true
         },
         "log": {
           "type": "string",

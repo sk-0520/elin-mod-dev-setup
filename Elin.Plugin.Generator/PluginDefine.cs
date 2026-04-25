@@ -31,6 +31,7 @@ namespace Elin.Plugin.Generator
         public string Version { get; set; } = string.Empty;
         public bool UseDebugId { get; set; }
         public string Log { get; set; } = string.Empty;
+        public bool DisableDebugPublish { get; set; } = true;
 
         #endregion
     }
@@ -50,6 +51,7 @@ namespace Elin.Plugin.Generator
         #region property
 
         public string? Log { get; set; }
+        public bool? DisableDebugPublish { get; set; } = true;
 
         #endregion
     }

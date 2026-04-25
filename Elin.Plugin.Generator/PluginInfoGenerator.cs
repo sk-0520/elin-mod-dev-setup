@@ -266,6 +266,8 @@ namespace Elin.Plugin.Generator
                     ]))}}
                     public static bool IsEnabledLogFile => !string.IsNullOrWhiteSpace(LogFile) && !LogFile.Equals("NUL", StringComparison.OrdinalIgnoreCase);
 
+                    {{docHeader("mod", "disableDebugPublish")}}
+                    public static bool DisableDebugPublish = {{define.Mod.DisableDebugPublish.ToString().ToLowerInvariant()}}
                 #endif
                 }
                 """;
@@ -305,6 +307,10 @@ namespace Elin.Plugin.Generator
                     if (devDefine.Log is not null)
                     {
                         define.Mod.Log = devDefine.Log;
+                    }
+                    if (devDefine.DisableDebugPublish is not null)
+                    {
+                        define.Mod.DisableDebugPublish = devDefine.DisableDebugPublish.Value;
                     }
                 }
 
