@@ -107,6 +107,7 @@
       "required": [
         "version",
         "useDebugId",
+        "disableDebugPublish",
         "log"
       ],
       "additionalProperties": false,
@@ -119,6 +120,10 @@
         "useDebugId": {
           "type": "boolean",
           "description": "デバッグ時にIDを変更するかどうか。基本的に true で OK"
+        },
+        "disableDebugPublish": {
+          "type": "boolean",
+          "description": "デバッグ時に公開を無効にするかどうか。基本的に true で OK"
         },
         "log": {
           "type": "string",
