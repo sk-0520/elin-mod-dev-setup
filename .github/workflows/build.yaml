@@ -70,6 +70,21 @@ jobs:
           globs: '**/*.md'
           config: .markdownlint.json
 
+  editorconfig:
+    name: "<Validation> EditorConfig"
+
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Mod
+        uses: actions/checkout@v6
+
+      - name: Set up editorconfig-checker
+        uses: editorconfig-checker/action-editorconfig-checker@main
+
+      - name: Run editorconfig-checker
+        run: editorconfig-checker
+
   build:
     name: "<Build> Mod"
 
