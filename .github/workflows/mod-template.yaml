@@ -170,8 +170,11 @@ jobs:
       - name: Check Artifacts
         shell: bash
         run: |
+          # windows を基準とする
           diff --exclude='preview.*' --brief --recursive --strip-trailing-cr artifacts/build-windows-latest artifacts/build-ubuntu-latest
           diff --exclude='preview.*' --brief --recursive --strip-trailing-cr artifacts/build-windows-latest artifacts/build-macos-latest
+          # linux/unix は完全に一緒のはず
+          diff --exclude='preview.*' --brief --recursive artifacts/build-ubuntu-latest artifacts/build-macos-latest
 
   debug-dll-error:
     name: "Debug DLL Error"
