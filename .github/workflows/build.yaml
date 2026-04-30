@@ -92,6 +92,7 @@ jobs:
       - json
       - xhtml
       - markdown
+      - editorconfig
 
     runs-on: &mod-os-image windows-latest
 
