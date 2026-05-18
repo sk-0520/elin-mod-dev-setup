@@ -21,6 +21,15 @@ namespace Elin.Plugin.Main
         protected virtual void PrePHLPlugin(int reloadCount, string assemblyPath)
         { }
 
+        protected virtual void AwakePlugin()
+        { }
+
+        protected virtual void StartPlugin()
+        { }
+
+        protected virtual void OnDestroyPlugin()
+        { }
+
         #endregion
     }
 
@@ -28,8 +37,6 @@ namespace Elin.Plugin.Main
     public partial class Plugin : TemplatePluginBase
     {
         #region property
-
-        private Plugin Instance { get; private set; } = default!;
 
         /// <summary>
         /// <see cref="AwakePlugin"/> 後に <see cref="Harmony.PatchAll()"/> を呼び出すか。
@@ -56,7 +63,6 @@ namespace Elin.Plugin.Main
         /// <remarks>本メソッドではインフラ面の構築も行っているため、プラグインとしての起動処理は <see cref="AwakePlugin()"/> で実施すること。</remarks>
         public void Awake()
         {
-            Instance = this;
             ModHelper.Initialize(this, Logger, SynchronizationContext.Current);
 
             AwakePlugin();

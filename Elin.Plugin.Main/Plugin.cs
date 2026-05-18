@@ -12,7 +12,7 @@ namespace Elin.Plugin.Main
         /// <summary>
         /// 起動時のプラグイン独自処理。
         /// </summary>
-        private void AwakePlugin()
+        protected override void AwakePlugin()
         {
             // サンプル用パッチ処理のため削除してください
             PatchSample();
@@ -22,7 +22,7 @@ namespace Elin.Plugin.Main
         /// <summary>
         /// 終了時のプラグイン独自処理。
         /// </summary>
-        private void OnDestroyPlugin()
+        protected override void OnDestroyPlugin()
         {
             //NOP
         }

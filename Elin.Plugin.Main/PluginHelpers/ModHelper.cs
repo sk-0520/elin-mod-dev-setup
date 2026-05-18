@@ -144,7 +144,7 @@ namespace Elin.Plugin.Main.PluginHelpers
         /// }
         /// </code>
         /// </example>
-        public static void Initialize(BaseUnityPlugin plugin, ManualLogSource logger, SynchronizationContext context)
+        public static void Initialize(Plugin plugin, ManualLogSource logger, SynchronizationContext context)
         {
             Plugin = plugin;
             Logger = logger;
