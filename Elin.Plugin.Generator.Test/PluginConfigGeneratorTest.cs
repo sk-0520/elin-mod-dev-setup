@@ -90,7 +90,7 @@ namespace Elin.Plugin.Generator.Test
         }
 
         [Fact]
-        public void CopyToIncludesIgnorePluginConfigPropertiesTest()
+        public void CopyToExcludesIgnorePluginConfigPropertiesTest()
         {
             var generator = new PluginConfigGenerator();
             var driver = CSharpGeneratorDriver.Create(

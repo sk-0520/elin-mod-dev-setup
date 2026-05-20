@@ -636,7 +636,7 @@ namespace Elin.Plugin.Generator
                 }
 
                 /// <summary>
-                /// 現在の設定値を複製。
+                /// 現在の設定値を指定したオブジェクトにコピー。
                 /// </summary>
                 /// <remarks>
                 /// <para><see cref="Clone"/> と違い、あらかじめ用意されたオブジェクトに上書きを行う。</para>
