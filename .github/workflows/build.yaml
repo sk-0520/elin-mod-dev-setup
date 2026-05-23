@@ -132,6 +132,18 @@ jobs:
           Get-Content -Path $asmPath -Encoding UTF8
           Get-Content -Path $targetsPath -Encoding UTF8
 
+      - name: <Node.js> Setup
+        if: ${{ hashFiles('package.json') != ''  }}
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ./.node-version
+          cache: npm
+
+      - name: <Node.js> NPM install
+        if: ${{ hashFiles('package.json') != '' }}
+        shell: bash
+        run: npm ci --ignore-scripts
+
       - name: Build
         shell: pwsh
         run: |
@@ -162,6 +174,18 @@ jobs:
       - name: Checkout CI Module
         uses: actions/checkout@v6
         with: *checkout-ci-module
+
+      - name: <Node.js> Setup
+        if: ${{ hashFiles('package.json') != ''  }}
+        uses: actions/setup-node@v6
+        with:
+          node-version-file: ./.node-version
+          cache: npm
+
+      - name: <Node.js> NPM install
+        if: ${{ hashFiles('package.json') != '' }}
+        shell: bash
+        run: npm ci --ignore-scripts
 
       - name: Setup CI Module
         shell: pwsh
