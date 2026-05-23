@@ -214,7 +214,7 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
 
 ### Nodejs
 
-ロートディレクトリに `package.json` が存在する場合 `Elin.Plugin.Main` をビルドすると `npm run build` が実行されます。
+ルートディレクトリに `package.json` が存在する場合 `Elin.Plugin.Main` をビルドすると `npm run build` が実行されます。
 コマンド自体は `PackageJsonBuildCommand` で定義されているので必要に応じて再設定してください。
 
 変数の設定は「Steam/Elin のパス確認」を参照してください。
