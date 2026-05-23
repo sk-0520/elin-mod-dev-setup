@@ -132,14 +132,14 @@ jobs:
           Get-Content -Path $asmPath -Encoding UTF8
           Get-Content -Path $targetsPath -Encoding UTF8
 
-      - name: <Nodejs> Setup
-        if: ${{ hashFiles('package.json') != '' }}
+      - name: <Node.js> Setup(.node-version)
+        if: ${{ hashFiles('package.json') != ''  }}
         uses: actions/setup-node@v6
         with:
           node-version-file: ./.node-version
           cache: npm
 
-      - name: <Nodejs> NPM install
+      - name: <Node.js> NPM install
         if: ${{ hashFiles('package.json') != '' }}
         shell: bash
         run: npm ci --ignore-scripts

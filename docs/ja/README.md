@@ -212,12 +212,14 @@ initialize.bat を実行して Mod ファイル名を入力すると、Mod 作�
     * `Awake`, `OnDestroy` などがその対象です
     * 命名として `*.ModTemplate.cs` は Mod 開発者コードに混入せざるを得ない実装を可能な限り分離したものになります
 
-### Nodejs
+### Node.js
 
 ルートディレクトリに `package.json` が存在する場合 `Elin.Plugin.Main` をビルドすると `npm run build` が実行されます。
 コマンド自体は `PackageJsonBuildCommand` で定義されているので必要に応じて再設定してください。
 
 変数の設定は「Steam/Elin のパス確認」を参照してください。
+
+テンプレート側で用意している Github Actions では `.node-version` が存在する前提になっている点に注意してください。
 
 > [!NOTE]
 > MSBuild 外で必要なアセット作成を行った場合に Mod リリース時に忘れそうなので組み込んでいます。そのためパッケージの取得( `npm ci` など)は自動実行されない点に注意してください。
